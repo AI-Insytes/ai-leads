@@ -2,7 +2,7 @@
 
 ## Project Members
 
-* Lara Zumbrunn  
+* Lana Zumbrunn  
 * Caleb Hemphill  
 * Rhett Chase  
 * Felix Traveras  
