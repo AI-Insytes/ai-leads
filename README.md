@@ -1,4 +1,4 @@
-# ai-leads
+# AI Leads
 
 ## Project Members
 
@@ -28,3 +28,14 @@ Pain Points:
 
 * Eases the difficulty of reaching the “early adopters” (first people interested in buying the product) in early stage of business growth
 * Reduces time for each outreach
+
+
+# Project Documentation
+
+[User Stories](/Proj-Mngmt/userstories.md)
+
+[Software Requirements](/Proj-Mngmt/requirements.md)
+
+[Domain Model](/Proj-Mngmt/domain-model.md)
+
+[Wireframe](/Proj-Mngmt/wireframe.md)
