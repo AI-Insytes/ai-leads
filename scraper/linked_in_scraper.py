@@ -1,5 +1,5 @@
 from playwright.sync_api import sync_playwright
-import pyperclip
+# import pyperclip
 from dotenv import load_dotenv
 import os
 
@@ -38,33 +38,46 @@ def get_profile():
         # Ensure the page has loaded the results after filtering by "People"
         page.wait_for_selector('div.search-results-container')
         
-        # Use a selector to find all profile links that include the name
+        # Initialize a set to track unique URLs and a variable for the top profile URL
+        unique_urls = set()
+        top_profile_url = ""
+
+        # Locator for all profile links that include the specified name
         profile_links = page.locator(f'a.app-aware-link:has-text("{name}")')
 
-        # Initialize a list to hold all matching profile URLs
-        all_profile_urls = []
-
-         # Process the top profile separately
+        # Check and process the top profile URL separately
         if profile_links.count() > 0:
             top_profile_url = profile_links.first.get_attribute('href').split('?')[0]
-            all_profile_urls.append({"Top Profile URL": top_profile_url})
+            unique_urls.add(top_profile_url)  # Ensure the top profile is also considered unique
 
-        # Process the rest of the profiles
+        # Process the remaining profiles
         for i in range(1, profile_links.count()):
             profile_url = profile_links.nth(i).get_attribute('href').split('?')[0]
-            all_profile_urls.append({"Profile URL": profile_url})
+            if profile_url not in unique_urls:
+                unique_urls.add(profile_url)
 
-        # Print or process all collected profile URLs
-        for item in all_profile_urls:
-            print(item)
+        # Print or process the top profile URL distinctly
+        if top_profile_url:
+            print(f"Top Profile URL: {top_profile_url}")
 
-        # Optionally, write the profile URLs to a text file with identification for the top profile
-        with open("profile_urls.txt", "w") as file:
-            for item in all_profile_urls:
-                if "Top Profile URL" in item:
-                    file.write("Top Profile: " + item["Top Profile URL"] + "\n")
-                else:
-                    file.write(item["Profile URL"] + "\n")
+        # Print or process the rest of the unique profile URLs
+        for url in unique_urls:
+            if url != top_profile_url:  # Avoid repeating the top profile
+                print(f"Profile URL: {url}")
+                
+        # Ensure the directory exists
+        output_dir = os.path.join(os.path.dirname(__file__), 'scraper_outputs')
+        os.makedirs(output_dir, exist_ok=True)
+
+        # Specify the output file path within the new directory
+        output_file_path = os.path.join(output_dir, "profile_urls.txt")
+
+        # Write the unique profile URLs to the text file within the specified directory
+        with open(output_file_path, "w") as file:
+            file.write("Top Profile URL: " + top_profile_url + "\n\n")
+            for url in unique_urls:
+                if url != top_profile_url:  # Avoid repeating the top profile
+                    file.write(url + "\n")
 
         # Close the browser
         browser.close()
