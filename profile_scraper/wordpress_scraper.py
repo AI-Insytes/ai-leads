@@ -1,52 +1,59 @@
 from playwright.sync_api import sync_playwright
-
-author_urls = []
-commenters = []
+from bs4 import BeautifulSoup
 
 def main(keyword=None):
-  with sync_playwright() as p:
-    browser = p.chromium.launch(headless=False, slow_mo=1000)
-    context = browser.new_context()
-    page = context.new_page()
-    if keyword:
-      page.goto(f'https://wordpress.com/read/search?q={keyword}&sort=relevance')
-    else:
-      page.goto('https://wordpress.com/discover')
-    articles = page.query_selector_all('article')
-    length = len(articles)
-    print("length: " + str(length))
-    for article in articles:
-      print('new article')
-      url = article.query_selector('div.reader-avatar.is-compact.has-gravatar a')
-      if url:
-        print('new url')
-        author_urls.append("https://wordpress.com" + url.get_attribute('href'))
-        print("https://wordpress.com/" + url.get_attribute('href'))
-      # article.click()
-      # # search_articles(page, keyword)
-      # page.wait_for_timeout(2000)
-      # all_pages = page.context.pages
-      # if len(all_pages) > 1:
-      #   all_pages[1].close()
-    browser.close()
+    authors = {}
+    with sync_playwright() as p:
+        browser = p.chromium.launch(slow_mo=2000)
+        page = browser.new_page()
+        if keyword:
+            page.goto(f'https://wordpress.com/read/search?q={keyword}&sort=relevance')
+        else:
+            page.goto('https://wordpress.com/discover')
 
-def search_articles(page, keyword):
-  # page.wait_for_selector('*.comments')
-  # print('1')
-  # comment_list_items = page.query_selector_all('ol:is(.comment-list, .commentlist)')
-  # print('2')
-  # for comment in comment_list_items:
-  #   print('3')
-  #   comment.scroll_into_view()
-  #   avatar = comment.query_selector('img.avatar.avatar-42.wp-hovercard-attachment.grav-hashed.grav-hijack')
+        prev_scroll_height = page.evaluate('document.body.scrollHeight') / 2
+        try:
+            while len(authors) < 50:
+                html_content = page.content()
 
-  #   if avatar:
-  #     avatar.hover()
-  #     page.wait_for_selector('div.gravatar-hovercard.wp-hovercard')
-  #     link = page.query_selector('a[class=gravatar-hovercard__profile-link]').get_attribute('href')
-  #     print(link)
-  #     commenters.append(link)
-  pass
+                soup = BeautifulSoup(html_content, 'html.parser')
+
+                articles = soup.select('article')
+                for article in articles:
+
+                    author_urls = article.select_one('div.reader-avatar.is-compact.has-gravatar a')
+                    author_img = article.select_one('div.reader-avatar.is-compact.has-gravatar a img')
+                    author_group = article.select_one('div.reader-post-card__byline-details div.reader-post-card__byline-site a.reader-post-card__site.reader-post-card__link')
+                    author_blog_sites = article.select_one('div.reader-post-card__byline-details div.reader-post-card__author-and-timestamp span.reader-post-card__byline-secondary a.reader-post-card__byline-secondary-item')
+                    author_url = None
+                    author_name = None
+                    author_group_name = None
+                    author_blog_site = None
+                    if author_urls:
+                        author_url = "https://wordpress.com" + author_urls.get('href')
+                    if author_img:
+                        author_name = author_img.get('alt')
+                    if author_group:
+                        author_group_name = author_group.get_text()
+                    if author_blog_sites:
+                        author_blog_site = author_blog_sites.get('href')
+                    authors[author_name] = {"url": author_url, "blog-name": author_group_name, "blog-url": author_blog_site, "name": author_name}
+                page.evaluate(f'window.scrollTo(0, {prev_scroll_height} + 100)')
+                page.wait_for_timeout(500)
+                more_articles = page.query_selector_all('article')
+                if not more_articles:
+                    print("No more articles to load.")
+                    break
+                current_scroll_height = page.evaluate('document.body.scrollHeight')
+                if current_scroll_height == prev_scroll_height:
+                    print("No more content loaded.")
+                    break
+                prev_scroll_height = current_scroll_height
+        except Exception as e:
+            print(e)
+        browser.close()
+    return authors
 
 if __name__ == "__main__":
-    main('Blockchain') # keyword can be inputted
+    authors = main('Blockchain')  # keyword can be inputted
+    print(len(authors))
