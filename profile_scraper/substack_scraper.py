@@ -2,12 +2,11 @@ from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
 
-def search_profiles(search_query):
+def people_search_profiles(search_query):
     """
     
     """
 
-    # store profile pages markup
     profiles_markup = []
 
     with sync_playwright() as p:
@@ -43,12 +42,108 @@ def search_profiles(search_query):
     
     return profiles_markup
 
-def extract_profiles(profiles_markup):
+def get_profile_from_publication(publication_link):
     """
     
     """
 
-    # store profiles data
+    about_markup = None
+    profile_links = []
+    profiles_markup = []
+
+    # go to the about page for blog and extract markup containing profile link(s)
+    with sync_playwright() as p:
+        # setup
+        browser = p.chromium.launch(headless=False, slow_mo=1000)
+        page = browser.new_page()
+        page.goto(publication_link)
+
+        # skip subscription prompt
+        skip_button = page.get_by_role("button", name="No thanks")
+        if skip_button:
+            skip_button.click()
+
+        # extract about page markup with profile link(s)
+        about_button = page.get_by_role("button", name="About")
+        about_button.click()
+        about_markup = page.content()
+
+        browser.close()
+
+    # extract the profile link(s)
+    soup = BeautifulSoup(about_markup, "html.parser")
+    profile_links_markup = soup.select("div.content-person")
+    for profile_link in profile_links_markup:
+        link_markup = profile_link.select("a")[0]
+        link = link_markup.get("href")
+        profile_links.append(link)
+
+    # go to each profile page and extract the markup
+    for link in profile_links:
+
+        # store profile markup
+        markup = None
+
+        # go to profile page
+        with sync_playwright() as p:
+            # setup
+            browser = p.chromium.launch(headless=False, slow_mo=1000)
+            page = browser.new_page()
+            page.goto(link)  
+
+            # extract markup
+            markup = page.content()
+
+            browser.close()
+        
+        profiles_markup.append(markup)    
+
+    return profiles_markup
+
+def publication_search_profiles(search_query):
+    """
+    
+    """
+
+    publication_links = []
+    publications_markup = None
+    profiles_markup = []   
+
+    with sync_playwright() as p:
+        # setup
+        browser = p.chromium.launch(headless=False, slow_mo=1000)
+        page = browser.new_page()
+        page.goto("https://substack.com/home")
+
+        # search
+        page.get_by_placeholder("Search...").fill(search_query)
+        page.get_by_placeholder("Search...").press("Enter")
+        page.get_by_role("button", name="Publications").click()
+
+        # get publications links
+        publications_markup = page.content()
+        
+        browser.close()
+
+    # get publication links
+    soup = BeautifulSoup(publications_markup, "html.parser")
+    publication_links_markup = soup.select("div.reader2-page-body div div a.pencraft")
+    for link in publication_links_markup:
+        publication_link = link.get("href")
+        publication_links.append(publication_link)
+
+    # get profiles markup
+    for publication_link in publication_links[:2]: # TODO testing limit, remove slice for production
+        markup = get_profile_from_publication(publication_link)
+        profiles_markup += markup
+
+    return profiles_markup
+
+def extract_profiles_data(profiles_markup):
+    """
+    
+    """
+
     profile_objects = []
 
     # iterate over each profile markup to extract data
@@ -64,10 +159,14 @@ def extract_profiles(profiles_markup):
         name_markup = soup.select("h1")[0]
         profile["name"] = name_markup.get_text()
 
-        # extract blog link
+        # extract blog
         if soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset"):
+            # blog name
+            blog_name_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")[0]
+            profile["blog_name"] = blog_name_markup.get_text()
+            # blog link
             blog_link_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")[0]
-            profile["blog"] = blog_link_markup.get("href")
+            profile["blog_link"] = blog_link_markup.get("href")
 
         # extract profile links
         profile_links_markup = soup.select("#dialog6 div div a")
@@ -87,11 +186,20 @@ def main(search_query):
     
     """
 
-    profiles_markup = search_profiles(search_query)
+    # people search
+    profiles_markup = people_search_profiles(search_query)
+    people_profile_objects = extract_profiles_data(profiles_markup)
 
-    profile_objects = extract_profiles(profiles_markup)
+    # publications search
+    publication_profiles_markup = publication_search_profiles(search_query)
+    publication_profile_objects = extract_profiles_data(publication_profiles_markup)
 
-    for profile_object in profile_objects:
+    # combine profile objects
+    combined_profile_objects = people_profile_objects + publication_profile_objects
+    # removes duplicates
+    # merged_profile_objects = list(set(combined_profile_objects)) # TODO remove duplicates
+
+    for profile_object in combined_profile_objects:
         for key, value in profile_object.items():
             print(f"{key}: {value}")
 
