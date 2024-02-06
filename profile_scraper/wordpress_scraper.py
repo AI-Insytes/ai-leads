@@ -1,3 +1,4 @@
+import json
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
@@ -24,7 +25,7 @@ def main(keyword=None):
                     author_urls = article.select_one('div.reader-avatar.is-compact.has-gravatar a')
                     author_img = article.select_one('div.reader-avatar.is-compact.has-gravatar a img')
                     author_group = article.select_one('div.reader-post-card__byline-details div.reader-post-card__byline-site a.reader-post-card__site.reader-post-card__link')
-                    author_blog_sites = article.select_one('div.reader-post-card__byline-details div.reader-post-card__author-and-timestamp span.reader-post-card__byline-secondary a.reader-post-card__byline-secondary-item')
+                    author_blog_sites = article.select_one('div.reader-post-card__byline-details div.reader-post-card__author-and-timestamp span.reader-post-card__byline-secondary a.reader-post-card__byline-secondary-item:nth-last-of-type(2)')
                     author_url = None
                     author_name = None
                     author_group_name = None
@@ -52,8 +53,8 @@ def main(keyword=None):
         except Exception as e:
             print(e)
         browser.close()
-    return authors
+    return json.dumps(authors, indent=4)
 
 if __name__ == "__main__":
     authors = main('Blockchain')  # keyword can be inputted
-    print(len(authors))
+    print(authors)

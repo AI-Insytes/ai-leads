@@ -2,6 +2,7 @@ import llama2
 import requests
 import json
 from app import cli
+from app.file_utils import save_to_file, create_directory
 
 
 def prompt_main(cli_data):
@@ -50,8 +51,21 @@ def prompt_main(cli_data):
     # Checking if the request was successful
     if response.status_code == 200:
         # Parsing the JSON response
+        print("Drafting your customized message...")
         response_data = response.json()
-        print("Response from LLM:", response_data.get("response"))
+        draft_message = response_data.get("response")
+        print("Draft Message:", draft_message)
+        
+        # Define the directory and filename where you want to save the message
+        directory_name = "reports_and_messages"
+        filename = f"{lead_name.replace(' ', '_')}_message.txt"
+
+        # ensure the directory exists before trying to save
+        create_directory(directory_name)
+        
+        # save the message to the specified file
+        save_to_file(draft_message, directory_name, filename)
+        
     else:
         print("Failed to get response from the API. Status code:", response.status_code)
     
