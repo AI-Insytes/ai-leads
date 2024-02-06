@@ -16,13 +16,12 @@ def prompt_main(cli_data):
     # Crafting the prompt
     prompt = f"""
     Objective: {message_purpose}
-    Client Name: {lead_name}
-    Client Context: {lead_context}
+    Lead Name: {lead_name}
+    Lead Context: {lead_context}
     User Context: {user_context}
     Message Tone: {user_tone}
-    Please craft a personalized message for {lead_name}, incorporating the given background and objective.
-    """
-    
+    Please craft a personalized message for {lead_name}, incorporating the given objective, background, context and tone. Make this a total of {message_length} characters or less.
+    """    
     
     # API endpoint URL
     url = "http://localhost:11434/api/generate"
@@ -37,7 +36,7 @@ def prompt_main(cli_data):
         "model": "llama2",
         "prompt": prompt_text,
         "stream": False,  # Adjust based on whether you want streaming responses
-        # "verbose": True,
+        # "max_tokens": 50
     }
 
     # Headers to indicate JSON content
