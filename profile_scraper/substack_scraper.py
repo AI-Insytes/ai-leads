@@ -100,6 +100,6 @@ def main(search_query):
 ### Start Scraper ###
 #####################
 
-if __name__ == "__main___":
+if __name__ == "__main__":
     test_query = "blockchain"
     main(test_query)
