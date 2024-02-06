@@ -22,7 +22,7 @@ def get_message_length():
     return length_mapping[user_choice]
 
 def get_user_context():
-    question = Text("Provide additional context about yourself and or your request (e.g., is there a conference or event they may be interested in?)")
+    question = Text("Provide additional context about yourself and or your request (e.g., is there an event or product they may be interested in?)")
     
     user_response = Prompt.ask(question)
     

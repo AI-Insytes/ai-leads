@@ -8,8 +8,8 @@ def prompt_main(cli_data):
     
     message_purpose = cli_data['purpose']
     lead_name = "Oluchi Enebeli"
-    lead_context = "Oluchi Enebeli, a highly sought-after blockchain engineer in Africa..."
-    user_context = "I'm reaching out to invite this person to speak at our upcoming web3 conference."
+    lead_context = "Oluchi Enebeli, a highly sought-after blockchain engineer in Africa"
+    user_context = cli_data['context']
     user_tone = cli_data['tone']
     message_length = cli_data['length']
     
