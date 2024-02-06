@@ -19,6 +19,7 @@ client_context = "Oluchi Enebeli, a highly sought-after blockchain engineer in A
 user_context = "I'm reaching out to invite Oluchi to speak at our upcoming web3 conference."
 user_tone = "chill"
 objective = "Send a personalized invitation to connect to Oluchi Enebeli."
+user_name = "Rhett"
 
 # Crafting the prompt
 prompt = f"""
@@ -26,8 +27,9 @@ Objective: {objective}
 Client Name: {client_name}
 Client Context: {client_context}
 User Context: {user_context}
+User Name: {user_name}
 Message Tone: {user_tone}
-Please craft a personalized message for {client_name}, incorporating the given background and objective.
+Please craft a personalized message for {client_name}, incorporating the given background, objective and tone. Be sure to end the message in a complete sentence and sign the message with the {user_name}
 """
 
 try:
