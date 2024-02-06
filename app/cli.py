@@ -23,21 +23,12 @@ def get_message_length():
 
 
 def get_message_purpose():
-    choices = ['1', '2', '3']  
-    question = Text("What is the objective of your outreach message?\n"
-                    "[1] Connection request\n"
-                    "[2] Introduce a product\n"
-                    "[3] Invitation to an event\n",
-                    style="bold blue")
 
-    user_choice = Prompt.ask(question, choices=choices)
+    question = Text("What is the objective of your outreach message?\n")
+                    
+    user_response = Prompt.ask(question)
     
-    purpose_mapping = {
-        '1': 'Connection request',
-        '2': 'Introduce a product',
-        '3': 'Invitation to an event'
-    }
-    return purpose_mapping[user_choice]
+    return user_response
 
 
 def get_message_tone():
@@ -59,20 +50,22 @@ def get_message_tone():
     }
     return tone_mapping[user_choice]
 
+def main_cli():
+    message_length = get_message_length()
+    message_purpose = get_message_purpose()
+    message_tone = get_message_tone()
 
-message_length = get_message_length()
-message_purpose = get_message_purpose()
-message_tone = get_message_tone()
+    console.print(f"Selected length: [bold green]{message_length if message_length is not None else 'No limit'}[/bold green]")
+    console.print(f"Message purpose: [bold green]{message_purpose}[/bold green]")
+    console.print(f"Selected tone: [bold green]{message_tone}[/bold green]")
+    
+    cli_data = {
+        "length": message_length,
+        "purpose": message_purpose,
+        "tone": message_tone
+    }
 
-console.print(f"Selected length: [bold green]{message_length if message_length is not None else 'No limit'}[/bold green]")
-console.print(f"Selected purpose: [bold green]{message_purpose}[/bold green]")
-console.print(f"Selected tone: [bold green]{message_tone}[/bold green]")
+    return cli_data
 
-data = {
-    "length": message_length,
-    "purpose": message_purpose,
-    "tone": message_tone
-}
-
-json_data = json.dumps(data)
+# json_data = json.dumps(data)
 
