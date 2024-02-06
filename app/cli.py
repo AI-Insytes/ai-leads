@@ -15,11 +15,18 @@ def get_message_length():
     user_choice = Prompt.ask(question, choices=choices)
     
     length_mapping = {
-        '1': None, # add code when inputting lenght_mapping: if message_length is None
+        '1': "no length limit", # add code when inputting length_mapping: if message_length is None
         '2': 280,
         '3': 300
     }
     return length_mapping[user_choice]
+
+def get_user_context():
+    question = Text("Provide additional context about yourself and or your request (e.g., is there an event or product they may be interested in?)")
+    
+    user_response = Prompt.ask(question)
+    
+    return user_response
 
 
 def get_message_purpose():
@@ -53,7 +60,9 @@ def get_message_tone():
 def main_cli():
     message_length = get_message_length()
     message_purpose = get_message_purpose()
+    user_context = get_user_context()
     message_tone = get_message_tone()
+    
 
     console.print(f"Selected length: [bold green]{message_length if message_length is not None else 'No limit'}[/bold green]")
     console.print(f"Message purpose: [bold green]{message_purpose}[/bold green]")
@@ -62,10 +71,9 @@ def main_cli():
     cli_data = {
         "length": message_length,
         "purpose": message_purpose,
+        "context": user_context,
         "tone": message_tone
     }
 
     return cli_data
-
-# json_data = json.dumps(data)
 
