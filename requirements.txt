@@ -1,7 +1,16 @@
-beautifulsoup4==4.12.3
-bs4==0.0.2
 certifi==2024.2.2
 charset-normalizer==3.3.2
+console==0.9907
+ezenv==0.92
+idna==3.6
+markdown-it-py==3.0.0
+mdurl==0.1.2
+Pygments==2.17.2
+requests==2.31.0
+rich==13.7.0
+urllib3==2.2.0
+beautifulsoup4==4.12.3
+bs4==0.0.2
 cssselect==1.2.0
 greenlet==3.0.3
 idna==3.6
@@ -14,8 +23,6 @@ playwright==1.41.1
 pyee==11.0.1
 pyperclip==1.8.2
 python-dotenv==1.0.1
-requests==2.31.0
 soupsieve==2.5
 typing_extensions==4.9.0
-urllib3==2.2.0
 w3lib==2.1.2
