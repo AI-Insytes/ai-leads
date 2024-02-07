@@ -160,7 +160,7 @@ def extract_profiles_data(profiles_markup):
         name_markup = soup.select("h1")[0]
         user_name = name_markup.get_text()
         user_name = user_name.replace("\u00a0", "") # removes non-breaking space in name
-        profile["user-name"] = user_name
+        profile["lead-name"] = user_name
 
         # extract blog
         if soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset"):
