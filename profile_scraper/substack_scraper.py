@@ -1,4 +1,3 @@
-import json
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
@@ -206,6 +205,4 @@ def main(search_query):
     #     for key, value in profile_object.items():
     #         print(f"{key}: {value}")
 
-    profile_objects_json = json.dumps(combined_profile_objects, indent=4)
-
-    return profile_objects_json
+    return combined_profile_objects

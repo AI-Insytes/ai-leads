@@ -16,8 +16,8 @@ def add_to_leads(json_data, origin_str, keyword, refresh=False):
   else:
     leads_data.extend(json_data)
 
-  with open(leads_json_path, 'w') as leads:
-    json.dump(leads_data, leads, indent=4)
+  with open(leads_json_path, 'w', encoding='utf-8') as leads:
+    json.dump(leads_data, leads, indent=4, ensure_ascii=False)
 
   return "done"
 
