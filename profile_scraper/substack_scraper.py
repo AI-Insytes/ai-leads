@@ -203,14 +203,5 @@ def main(search_query):
     #         print(f"{key}: {value}")
 
     profile_objects_json = json.dumps(combined_profile_objects, indent=4)
-    print(profile_objects_json)
 
     return profile_objects_json
-
-#####################
-### Start Scraper ###
-#####################
-
-if __name__ == "__main__":
-    test_query = "blockchain"
-    main(test_query)
