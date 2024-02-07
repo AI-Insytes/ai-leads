@@ -19,7 +19,7 @@ def check_leads_data(keyword, sources):
 
 def search_leads(keyword, sources):
     """
-    
+    Main function to search for leads from various sources
     """
 
     if sources["wordpress"]:

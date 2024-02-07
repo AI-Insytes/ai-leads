@@ -1,12 +1,12 @@
 import json
 import csv
 import os
-
+from app.file_utils import save_to_file, create_directory
 
 def main_report(keyword):
 
-    csv_file_path = 'leads_and_messages/report.csv'
-    json_file_path = f'pseudobase/leads_data/{keyword}_data.json'
+    csv_file_path = save_to_file({keyword}, 'leads_and_messages', 'report.csv')
+    json_file_path = save_to_file({keyword}, 'leads_and_messages', 'report.txt')
 
     try: 
         with open(json_file_path, 'r') as json_file:
