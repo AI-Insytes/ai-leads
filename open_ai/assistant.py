@@ -70,14 +70,6 @@ try:
 
     print(f"\nAI response time: {duration} seconds")
     
-    
-    # Fetch and print the messages after the run completes
-    # messages_response = client.beta.threads.messages.list(thread_id=thread.id)
-    # print("\nMessages:")
-    # for message in messages_response.data:
-    #     print(f"{message.role.title()}: {message.content}")
-
-
 
 except Exception as e:
     print(f'An error occurred: {e}')
