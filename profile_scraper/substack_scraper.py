@@ -1,3 +1,4 @@
+import json
 from playwright.sync_api import sync_playwright
 from bs4 import BeautifulSoup
 
@@ -157,25 +158,27 @@ def extract_profiles_data(profiles_markup):
 
         # extract name
         name_markup = soup.select("h1")[0]
-        profile["name"] = name_markup.get_text()
+        user_name = name_markup.get_text()
+        user_name = user_name.replace("\u00a0", "") # removes non-breaking space in name
+        profile["lead-name"] = user_name
 
         # extract blog
         if soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset"):
             # blog name
             blog_name_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")[0]
-            profile["blog_name"] = blog_name_markup.get_text()
+            profile["blog-name"] = blog_name_markup.get_text()
             # blog link
             blog_link_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")[0]
-            profile["blog_link"] = blog_link_markup.get("href")
+            blog_link = blog_link_markup.get("href")
+            blog_link = "/".join(blog_link.split("/", 3)[:3]) # truncates url to base domain
+            profile["blog-link"] = blog_link
 
         # extract profile links
         profile_links_markup = soup.select("#dialog6 div div a")
-        profile_links = {}
         for link in profile_links_markup:
             link_name_markup = link.select("div")[0]
             link_name = link_name_markup.get_text()
-            profile_links[link_name] = link.get("href")
-        profile["profiles"] = profile_links
+            profile[link_name] = link.get("href")
 
         profile_objects.append(profile)
 
@@ -199,15 +202,10 @@ def main(search_query):
     # removes duplicates
     # merged_profile_objects = list(set(combined_profile_objects)) # TODO remove duplicates
 
-    for profile_object in combined_profile_objects:
-        for key, value in profile_object.items():
-            print(f"{key}: {value}")
+    # for profile_object in combined_profile_objects:
+    #     for key, value in profile_object.items():
+    #         print(f"{key}: {value}")
 
+    profile_objects_json = json.dumps(combined_profile_objects, indent=4)
 
-#####################
-### Start Scraper ###
-#####################
-
-if __name__ == "__main__":
-    test_query = "blockchain"
-    main(test_query)
+    return profile_objects_json
