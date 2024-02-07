@@ -1,6 +1,7 @@
 from rich.console import Console
 from rich.prompt import Prompt
 from rich.text import Text
+#from 
 
 console = Console()
 
@@ -65,6 +66,7 @@ def get_message_tone():
 
 def main_cli():
     lead_category = get_search_query()
+    #run scrape_leads(user_response)
     message_length = get_message_length()
     message_purpose = get_message_purpose()
     user_context = get_user_context()
