@@ -62,5 +62,5 @@ json_array = [
 
 origin_str = "WordPress"
 
-result = add_to_leads(json_array, origin_str)
+result = add_to_leads(json_array, origin_str, "test")
 print(result)
