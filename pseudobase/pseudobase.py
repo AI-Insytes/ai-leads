@@ -32,25 +32,39 @@ def add_to_leads(json_data, origin_str, keyword, refresh=False):
   with open(leads_json_path, 'w', encoding='utf-8') as leads:
     json.dump(leads_data, leads, indent=4, ensure_ascii=False)
 
-def add_message_to_lead(name, message_str):
-  leads_json_path = os.path.join('pseudobase', 'leads.json')
+def add_message_to_lead(keyword, generated_message):
+  """
+    Add a generated message to a lead in the leads JSON file.
 
-  if not os.path.exists(leads_json_path):
-        print("Error: Leads JSON file does not exist.")
-        return
+    Parameters:
+    - keyword (str): Keyword associated with the leads data.
+    - generated_message (str): The generated message to be added.
+
+    Raises:
+    - Exception: If the leads JSON file does not exist.
+
+    Returns:
+    None
+    """
+  leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
+
+  if os.path.exists(leads_json_path):
+    with open(leads_json_path, 'r') as leads:
+      leads_data = json.load(leads)
+  else:
+    raise Exception('Path Does Not Exist')
   
   with open(leads_json_path, 'r') as leads:
      leads_data = json.load(leads)
 
   for lead in leads_data:
-     if lead.get('name') == name:
-        if 'generated-messages' in lead:
-           lead['generated-messages'].append(message_str)
-        else:
-           lead['generated-messages'] = [message_str]
-        break
-  with open(leads_json_path, 'w') as leads:
-     json.dump(leads_data, leads, indent=4)
+      if 'generated-messages' in lead:
+          lead['generated-messages'].append(generated_message)
+      else:
+          lead['generated-messages'] = [generated_message]
+      break
+  with open(leads_json_path, 'w', encoding='utf-8') as leads:
+     json.dump(leads_data, leads, indent=4, ensure_ascii=False)
   pass
 
 
