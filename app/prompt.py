@@ -29,7 +29,7 @@ def prompt_main(cli_data):
     """
     
     start_time = datetime.now()
-    print("Drafting your customized message...")    
+    print("Compiling your leads and messages...")    
     
     # API endpoint URL
     url = "http://localhost:11434/api/generate"
@@ -66,7 +66,7 @@ def prompt_main(cli_data):
         print("Draft Message:", draft_message)
         
         # Define the directory and filename where you want to save the message
-        directory_name = "reports_and_messages"
+        directory_name = "leads_and_messages"
         filename = f"{lead_name.replace(' ', '_')}_message.txt"
 
         # ensure the directory exists before trying to save
