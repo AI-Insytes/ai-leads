@@ -9,15 +9,12 @@ def main(keyword=None):
             'args': [
                 '--disable-blink-features=AutomationControlled'
             ],
-            'headless': False,
             'slow_mo': 2000
         }
-        browser = p.firefox.launch(**options)
+        browser = p.chromium.launch(**options)
         try:
             context = browser.new_context()
             page = context.new_page()
-            page.goto('https://wordpress.com/log-in')
-            input("Log in now. Press enter when done.")
 
             if keyword:
                 page.goto(f'https://wordpress.com/read/search?q={keyword}&sort=relevance')
@@ -26,7 +23,7 @@ def main(keyword=None):
             page.wait_for_timeout(2000)
             prev_scroll_height = page.evaluate('document.body.scrollHeight') / 2
 
-            while len(authors) < 50:
+            while len(authors) < 20:
                 html_content = page.content()
 
                 soup = BeautifulSoup(html_content, 'html.parser')
@@ -37,7 +34,7 @@ def main(keyword=None):
                     author_img = article.select_one('div.reader-avatar.is-compact.has-gravatar a img')
                     author_group = article.select_one('div.reader-post-card__byline-details div.reader-post-card__byline-site a.reader-post-card__site.reader-post-card__link')
                     author_blog_sites = article.select_one('div.reader-post-card__byline-details div.reader-post-card__author-and-timestamp span.reader-post-card__byline-secondary a.reader-post-card__byline-secondary-item:nth-last-of-type(2)')
-                    author_blog_contexts = article.select_one('div.reader-post-card__post div.reader-post-card__post-details div.reader-excerpt__content reader-excerpt')
+                    author_blog_contexts = article.select_one('div.reader-post-card__post div.reader-post-card__post-details div.reader-excerpt__content.reader-excerpt')
                     author_url = None
                     author_name = None
                     author_group_name = None
