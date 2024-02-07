@@ -22,18 +22,14 @@ def search_leads(keyword, sources):
     
     """
 
-    search_results = []
-
     if sources["wordpress"]:
         wordpress_results = wordpress_search(keyword)
-        search_results.append(wordpress_results)
-        # add_to_leads(wordpress_results, "WordPress", keyword)
+        print(wordpress_results)
+        add_to_leads(wordpress_results, "WordPress", keyword)
     # if sources["substack"]:
-    #     substack_results = substack_search(keyword)
-    #     search_results.append(substack_results)
-    #     add_to_leads(substack_results, "Substack", keyword)
-
-    return search_results
+        # substack_results = substack_search(keyword)
+        # print(substack_results)
+        # add_to_leads(substack_results, "Substack", keyword)
 
 def search_main(input_keyword):
     """
@@ -64,11 +60,7 @@ def search_main(input_keyword):
 
     # new search
     else:
-        search_results = search_leads(keyword, sources)
-
-    # store leads data search results in pseudobase
-    # TODO add_to_leads(search_results, source)
-    print(search_results)
+        search_leads(keyword, sources)
 
 
 ### Test #######################
