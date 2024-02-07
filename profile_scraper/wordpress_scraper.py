@@ -1,30 +1,31 @@
 import json
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
+import asyncio
 
-def main(keyword=None):
+async def main(keyword=None):
     authors = []
-    with sync_playwright() as p:
+    async with async_playwright() as p:
         options = {
             'args': [
                 '--disable-blink-features=AutomationControlled'
             ],
             'slow_mo': 2000
         }
-        browser = p.chromium.launch(**options)
+        browser = await p.chromium.launch(**options)
         try:
-            context = browser.new_context()
-            page = context.new_page()
+            context = await browser.new_context()
+            page = await context.new_page()
 
             if keyword:
-                page.goto(f'https://wordpress.com/read/search?q={keyword}&sort=relevance')
+                await page.goto(f'https://wordpress.com/read/search?q={keyword}&sort=relevance')
             else:
-                page.goto('https://wordpress.com/discover')
-            page.wait_for_timeout(2000)
-            prev_scroll_height = page.evaluate('document.body.scrollHeight') / 2
+                await page.goto('https://wordpress.com/discover')
+            await page.wait_for_timeout(2000)
+            prev_scroll_height = await page.evaluate('document.body.scrollHeight') / 2
 
             while len(authors) < 20:
-                html_content = page.content()
+                html_content = await page.content()
 
                 soup = BeautifulSoup(html_content, 'html.parser')
 
@@ -62,30 +63,28 @@ def main(keyword=None):
                             "wordpress-url": author_url
                         })
 
-                page.evaluate(f'window.scrollTo(0, {prev_scroll_height} + 100)')
-                page.wait_for_timeout(500)
-                more_articles = page.query_selector_all('article')
+                await page.evaluate(f'window.scrollTo(0, {prev_scroll_height} + 100)')
+                await page.wait_for_timeout(500)
+                more_articles = await page.query_selector_all('article')
                 if not more_articles:
                     print("No more articles to load.")
                     break
-                current_scroll_height = page.evaluate('document.body.scrollHeight')
+                current_scroll_height = await page.evaluate('document.body.scrollHeight')
                 if current_scroll_height == prev_scroll_height:
                     print("No more content loaded.")
                     break
                 prev_scroll_height = current_scroll_height
 
-            context.close()
+            await context.close()
 
         except Exception as e:
             print(e)
 
     return authors
 
-def get_tags(html_content):
-    soup = BeautifulSoup(html_content, 'html.parser')
-    tags = [tag.get_text() for tag in soup.select('span.reader-post-card__tag a.reader-post-card__tag-link.ignore-click')]
-    return tags or None
+async def run():
+    authors_data = await main('Blockchain')  # keyword can be inputted
+    print(authors_data)
 
 if __name__ == "__main__":
-    authors_data = main('Blockchain')  # keyword can be inputted
-    print(authors_data)
+    asyncio.run(run())
