@@ -33,6 +33,19 @@ def add_to_leads(json_data, origin_str, keyword, refresh=False):
     json.dump(leads_data, leads, indent=4, ensure_ascii=False)
 
 def add_message_to_lead(keyword, generated_message):
+  """
+    Add a generated message to a lead in the leads JSON file.
+
+    Parameters:
+    - keyword (str): Keyword associated with the leads data.
+    - generated_message (str): The generated message to be added.
+
+    Raises:
+    - Exception: If the leads JSON file does not exist.
+
+    Returns:
+    None
+    """
   leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
 
   if os.path.exists(leads_json_path):
