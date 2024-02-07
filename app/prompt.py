@@ -10,6 +10,7 @@ from app.file_utils import save_to_file, create_directory
 def prompt_main(cli_data):
     
     message_purpose = cli_data['purpose']
+    lead_category = cli_data['query']
     lead_name = "Oluchi Enebeli"
     lead_context = "Oluchi Enebeli, a highly sought-after blockchain engineer in Africa"
     user_context = cli_data['context']
@@ -21,9 +22,10 @@ def prompt_main(cli_data):
     Objective: {message_purpose}
     Lead Name: {lead_name}
     Lead Context: {lead_context}
+    Lead Category: {lead_category}
     User Context: {user_context}
     Message Tone: {user_tone}
-    Please craft a personalized message for {lead_name}, incorporating the given objective, background, context and tone. Make this message a total of {message_length} characters or less. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message.
+    Please craft a personalized message for {lead_name}, incorporating the given objective, background, context, tone, and lead category. The lead category is the industry or area of expertise the user is looking for connections in. Make this message a total of {message_length} characters or less. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message.
     """
     
     start_time = datetime.now()
