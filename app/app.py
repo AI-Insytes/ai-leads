@@ -5,9 +5,9 @@ import asyncio
 from app.search import search_main
 
 async def main():
-    keyword = get_search_query()
+    keyword = await get_search_query()
     scraper_task = asyncio.create_task(search_main(keyword))
-    cli_data = main_cli(keyword)
+    cli_data = await main_cli(keyword)
     await scraper_task
     prompt_main(cli_data)
     # main_report(keyword)

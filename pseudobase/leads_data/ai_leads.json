@@ -166,5 +166,173 @@
         "blog-url": "https://elly4god.wordpress.com",
         "wordpress-url": "https://wordpress.com/read/feeds/265447",
         "origin": "WordPress"
+    },
+    {
+        "lead-name": "Tanya Thibodeau",
+        "context": "The digital landscape is evolving with AI. Our new free course and webinar offer practical strategies for navigating this new world.",
+        "blog-name": "WordPress.com News",
+        "blog-url": "http://en.blog.wordpress.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/25823",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Beem Weeks",
+        "context": "Greetings, SE’ers! Beem Weeks here with you again. Today, let’s talk a little about AI image generators!For those of you who follow the Story Empire blog, you know C. S. Boyack has written a few posts about AI. You can find one of those posts here: POSTSo, what exactly is an AI image generator, and how can an author put such a thing to good use? An AI image generator allows the user to input information the user wishes to see in an image. For instance, if you have an idea for a character in your next novel or short story, you can enter a description of said character, and just like that, you’re looking at your character!",
+        "blog-name": "Story Empire",
+        "blog-url": "http://storyempire.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/133865719",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "annabellefranklinauthor",
+        "context": "I’m hoping to start publishing my Bad Boy Wizard series in the spring. I say ‘hoping’, because right now I feel like I’m facing an assault course.To begin with, this blog needs an overhaul. At the moment I’m using a workaround version of the Classic editor, as I have serious issues with the Block editor – it’s difficult to use without the ‘free’ plugins, which you can only have if you get the paid version of WordPress, which I can’t afford. On the other hand, I’m limited as to what I can do with this version of the Classic.I’ve been wondering if I should focus my marketing efforts on TikTok and Instagram. I haven’t explored these platforms before and I have to admit I find them daunting. The videos I’ve seen on TikTok are all so fast – fast edits, and people talking at 90 miles an hour. I’ll have to up my game if I’m not going to come across as a total amateur, and I’ll have to have something to say.",
+        "blog-name": "The Literate Lurcher",
+        "blog-url": "https://annabellefranklinauthor.wordpress.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/9946922",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": null,
+        "context": null,
+        "blog-name": "Good Light Journal",
+        "blog-url": "https://tonykuyper.wordpress.com",
+        "wordpress-url": null,
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": null,
+        "context": "In the world of digital art, distinguishing between AI-generated and human-made creations has become a significant challenge. Almost overnight, tool sets for generating AI artworks became commonly available to the public, and suddenly, every digital art competition had to contend with potential submissions. Some have welcomed AI, while others demand competitors create artworks by their own hand and no other.The problem facing artists and judges alike is just how to determine whether an artwork was created by a human or an AI. So what can be done?Put It To The TestFirst of all, it’s crucial to understand what AI art generators can and cannot do. These algorithms, often trained on vast datasets of human-made art, excel in pattern recognition and replication. However, they typically struggle with conceptual depth and the nuanced, often irregular, elements that human creativity can produce. They’re great at mashing up weird combinations, like creating a cartoon picture of cats surfing off the coast of Neo-Hawaii, for example.Case StudyFor digital artist [Mizkai], this problem has already become very real. [Mizkai] entered an illustration contest in October, penning a Halloween scene with a young witch. After submission though, things went awry. “At first they said they suspected I had traced AI work as my style was inconsistent,” [Mizkai] told Hackaday. Trying to rectify the issue in good faith, [Mizkai] elected to try and sort the problem out with the competition organizers. “I said I’m happy to cooperate and provide them with evidence,” says [Mizkai], noting that she provided an original Photoshop file with layers intact, indicating she’d created the piece from scratch. When that wasn’t enough, [Mizkai] provided a range of other artworks including pencil drawings and inked pieces to bear out her case that she was indeed a real artist. When that wasn’t enough, she stepped up to providing time lapse videos of character sketches to show her technique.https://hackaday.com/wp-content/uploads/2023/11/10000000_24639141735677291_2149074033395101145_n.mp4",
+        "blog-name": "Hackaday",
+        "blog-url": "https://hackaday.com",
+        "wordpress-url": null,
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "SelfAwarePatterns",
+        "context": "AI consciousness seems like an easier thing to ponder when you approach it from a functionalist viewpoint. Sunday I watched the movie The Creator. The premise is a few decades in the future, we’ve managed to create sentient robots. At first, all seems well, with them being a boon for humanity. Then a nuclear bomb goes off in […]",
+        "blog-name": "SelfAwarePatterns",
+        "blog-url": "http://selfawarepatterns.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/15732934",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Wynne Leon",
+        "context": "“We live in a world where there is more and more information, and less and less meaning.” – Jean Baudrillard For this week, I’ve actually had to leave the house to go to work. It’s made me realize how much technology has changed our lives. I’ve worked remotely for years so somehow it was lost […]",
+        "blog-name": "Surprised By Joy",
+        "blog-url": "http://wynneleon.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/140555216",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "WriterOfWordsEtc",
+        "context": "I’m stuck describing an image in my head for my book and asked AI to help me come up with some inspirational terms I can use. I used ChatGPT to help me brainstorm because Google’s Bard is not legal in Canada.",
+        "blog-name": "Writer of Words etc",
+        "blog-url": "http://writerofwordsetc.ca",
+        "wordpress-url": "https://wordpress.com/read/feeds/107079447",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "robertjames1971",
+        "context": "WordPress.com let us know via email last night that there is now an AI Assistant available in the blog post editor. At least if you are using the Block Editor format. I don’t know if it’s there if you’re writing HTML code or anything else, but if you’re using blocks you can add an AI Assistant block and ask it to do stuff for you. For example, I asked the AI Assistant to write a paragraph about using AI to write a blog post and it came up with this absolute fucking masterpiece:AI has revolutionized the way we approach content creation, offering unprecedented efficiency and creativity. By harnessing the power of advanced algorithms, AI can rapidly generate compelling blog posts on a diverse range of topics, tailored to specific audiences. Moreover, it can analyze trends and audience engagement to optimize content, enhancing its impact. While AI streamlines the writing process, it also empowers human creators by providing valuable insights and freeing up time for strategic thinking and ideation. Embracing AI in blog writing opens up exciting possibilities for innovation and scalability in the ever-evolving digital landscape.",
+        "blog-name": "Inside the Red Head's Head",
+        "blog-url": "http://robertjames1971.blog",
+        "wordpress-url": "https://wordpress.com/read/feeds/96679785",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Tanya Thibodeau",
+        "context": "The digital landscape is evolving with AI. Our new free course and webinar offer practical strategies for navigating this new world.",
+        "blog-name": "WordPress.com News",
+        "blog-url": "http://en.blog.wordpress.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/25823",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Beem Weeks",
+        "context": "Greetings, SE’ers! Beem Weeks here with you again. Today, let’s talk a little about AI image generators!For those of you who follow the Story Empire blog, you know C. S. Boyack has written a few posts about AI. You can find one of those posts here: POSTSo, what exactly is an AI image generator, and how can an author put such a thing to good use? An AI image generator allows the user to input information the user wishes to see in an image. For instance, if you have an idea for a character in your next novel or short story, you can enter a description of said character, and just like that, you’re looking at your character!",
+        "blog-name": "Story Empire",
+        "blog-url": "http://storyempire.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/133865719",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "annabellefranklinauthor",
+        "context": "I’m hoping to start publishing my Bad Boy Wizard series in the spring. I say ‘hoping’, because right now I feel like I’m facing an assault course.To begin with, this blog needs an overhaul. At the moment I’m using a workaround version of the Classic editor, as I have serious issues with the Block editor – it’s difficult to use without the ‘free’ plugins, which you can only have if you get the paid version of WordPress, which I can’t afford. On the other hand, I’m limited as to what I can do with this version of the Classic.I’ve been wondering if I should focus my marketing efforts on TikTok and Instagram. I haven’t explored these platforms before and I have to admit I find them daunting. The videos I’ve seen on TikTok are all so fast – fast edits, and people talking at 90 miles an hour. I’ll have to up my game if I’m not going to come across as a total amateur, and I’ll have to have something to say.",
+        "blog-name": "The Literate Lurcher",
+        "blog-url": "https://annabellefranklinauthor.wordpress.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/9946922",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": null,
+        "context": null,
+        "blog-name": "Good Light Journal",
+        "blog-url": "https://tonykuyper.wordpress.com",
+        "wordpress-url": null,
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": null,
+        "context": "In the world of digital art, distinguishing between AI-generated and human-made creations has become a significant challenge. Almost overnight, tool sets for generating AI artworks became commonly available to the public, and suddenly, every digital art competition had to contend with potential submissions. Some have welcomed AI, while others demand competitors create artworks by their own hand and no other.The problem facing artists and judges alike is just how to determine whether an artwork was created by a human or an AI. So what can be done?Put It To The TestFirst of all, it’s crucial to understand what AI art generators can and cannot do. These algorithms, often trained on vast datasets of human-made art, excel in pattern recognition and replication. However, they typically struggle with conceptual depth and the nuanced, often irregular, elements that human creativity can produce. They’re great at mashing up weird combinations, like creating a cartoon picture of cats surfing off the coast of Neo-Hawaii, for example.Case StudyFor digital artist [Mizkai], this problem has already become very real. [Mizkai] entered an illustration contest in October, penning a Halloween scene with a young witch. After submission though, things went awry. “At first they said they suspected I had traced AI work as my style was inconsistent,” [Mizkai] told Hackaday. Trying to rectify the issue in good faith, [Mizkai] elected to try and sort the problem out with the competition organizers. “I said I’m happy to cooperate and provide them with evidence,” says [Mizkai], noting that she provided an original Photoshop file with layers intact, indicating she’d created the piece from scratch. When that wasn’t enough, [Mizkai] provided a range of other artworks including pencil drawings and inked pieces to bear out her case that she was indeed a real artist. When that wasn’t enough, she stepped up to providing time lapse videos of character sketches to show her technique.https://hackaday.com/wp-content/uploads/2023/11/10000000_24639141735677291_2149074033395101145_n.mp4",
+        "blog-name": "Hackaday",
+        "blog-url": "https://hackaday.com",
+        "wordpress-url": null,
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "SelfAwarePatterns",
+        "context": "AI consciousness seems like an easier thing to ponder when you approach it from a functionalist viewpoint. Sunday I watched the movie The Creator. The premise is a few decades in the future, we’ve managed to create sentient robots. At first, all seems well, with them being a boon for humanity. Then a nuclear bomb goes off in […]",
+        "blog-name": "SelfAwarePatterns",
+        "blog-url": "http://selfawarepatterns.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/15732934",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Wynne Leon",
+        "context": "“We live in a world where there is more and more information, and less and less meaning.” – Jean Baudrillard For this week, I’ve actually had to leave the house to go to work. It’s made me realize how much technology has changed our lives. I’ve worked remotely for years so somehow it was lost […]",
+        "blog-name": "Surprised By Joy",
+        "blog-url": "http://wynneleon.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/140555216",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "WriterOfWordsEtc",
+        "context": "I’m stuck describing an image in my head for my book and asked AI to help me come up with some inspirational terms I can use. I used ChatGPT to help me brainstorm because Google’s Bard is not legal in Canada.",
+        "blog-name": "Writer of Words etc",
+        "blog-url": "http://writerofwordsetc.ca",
+        "wordpress-url": "https://wordpress.com/read/feeds/107079447",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "robertjames1971",
+        "context": "WordPress.com let us know via email last night that there is now an AI Assistant available in the blog post editor. At least if you are using the Block Editor format. I don’t know if it’s there if you’re writing HTML code or anything else, but if you’re using blocks you can add an AI Assistant block and ask it to do stuff for you. For example, I asked the AI Assistant to write a paragraph about using AI to write a blog post and it came up with this absolute fucking masterpiece:AI has revolutionized the way we approach content creation, offering unprecedented efficiency and creativity. By harnessing the power of advanced algorithms, AI can rapidly generate compelling blog posts on a diverse range of topics, tailored to specific audiences. Moreover, it can analyze trends and audience engagement to optimize content, enhancing its impact. While AI streamlines the writing process, it also empowers human creators by providing valuable insights and freeing up time for strategic thinking and ideation. Embracing AI in blog writing opens up exciting possibilities for innovation and scalability in the ever-evolving digital landscape.",
+        "blog-name": "Inside the Red Head's Head",
+        "blog-url": "http://robertjames1971.blog",
+        "wordpress-url": "https://wordpress.com/read/feeds/96679785",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Olivia",
+        "context": "In today’s fast-paced digital world, the rise of artificial intelligence (AI) has brought about incredible changes in various industries. And one area that has seen a sbig transformation is the world of blogging. With AI technology becoming more advanced and accessible, bloggers are now able to use its power to enhance content creation, reach a wider audience, and break barriers in the blogging world. In this post, we’ll explore the ways in which AI is changing the game for bloggers and how it’s reshaping blogging  as we know it.AIs role in Content CreationIn the world of blogging, AI is revolutionizing the way content is created. With its advanced algorithms and amazing content creation, AI can analyse data, predict trends, and generate relevant and engaging content. It has the ability to understand user preferences, personalise recommendations, and even create content based on user input.Benefits and BreakthroughsIs AI Taking Over the Blogger’s Job?What are your thoughts on AI in the blogging world? Do you think it’s something bloggers should be using or something they should stay away from?",
+        "blog-name": "olivialucieblake.com",
+        "blog-url": "http://olivialucieblake.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/150974923",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Nicholas C. Rossis",
+        "context": "In my capacity as content creator, I use AI writing tools every day. One thing that never fails to impress me is how versatile they are, as they can be used for so many different needs and purposes.For example, I have been working on a series of posts that explain to people how to use Amazon ads. Doing this helped me realize that AI tools are perfect for educative purposes – from teaching marketing to helping students learn English as a foreign language.Here are some of the many ways I can think of in which AI tools can be used in education.AI can speed up research assistanceAI grammar checkers can teach grammatical concepts and correct errorsAI tools can offer analytics and feedbackAI paraphrasers can help in vocabulary buildingPlagiarism CheckAI summarizers can help in condensing information and making it more understandableSome Do’s and Don’ts of Using AI Tools for Educative Purposes",
+        "blog-name": "Nicholas C. Rossis",
+        "blog-url": "https://nicholasrossis.wordpress.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/42242938",
+        "origin": "WordPress"
+    },
+    {
+        "lead-name": "Perla Suferinței",
+        "context": "În anul ce tocmai s- a încheiat, mi- am pus încrederea în oameni și am eșuat. Când am ales să îmi pun încrederea în Tine, Dumnezeul meu, nu m- ai dezamăgit, deoarece, Tu ești în control. Și ai folosit fiecare circumstanță pentru a pune în aplicare planul Tău perfect.Dumnezeu m- a asigurat că sunt “cap” și nu “coadă”, și că trebuie să îmi văd viața așa cum o vede El. Alegând aceasta, nu voi putea lăsa ca săgeata otrăvitoare a vrăjmașului să pătrundă sub “scutul credinței”, străpungându – mi inima.Pentru anul acesta, îmi doresc:",
+        "blog-name": "Perla Suferinţei",
+        "blog-url": "https://elly4god.wordpress.com",
+        "wordpress-url": "https://wordpress.com/read/feeds/265447",
+        "origin": "WordPress"
     }
 ]

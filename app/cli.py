@@ -9,11 +9,8 @@ console = Console()
 
 async def get_search_query():
     question = "What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads."
-    
-    console.print(question, style="bold bright_magenta")  
-    
-    user_response = await Prompt.ask(">", show_default=False)  
-    
+    console.print(question, style="bold bright_magenta")
+    user_response = await ainput("> ")
     return user_response
 
 async def get_message_length():
