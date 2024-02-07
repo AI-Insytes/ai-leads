@@ -33,15 +33,17 @@ def main(keyword=None):
 
                 articles = soup.select('article')
                 for article in articles:
-
                     author_urls = article.select_one('div.reader-avatar.is-compact.has-gravatar a')
                     author_img = article.select_one('div.reader-avatar.is-compact.has-gravatar a img')
                     author_group = article.select_one('div.reader-post-card__byline-details div.reader-post-card__byline-site a.reader-post-card__site.reader-post-card__link')
                     author_blog_sites = article.select_one('div.reader-post-card__byline-details div.reader-post-card__author-and-timestamp span.reader-post-card__byline-secondary a.reader-post-card__byline-secondary-item:nth-last-of-type(2)')
+                    author_blog_contexts = article.select_one('div.reader-post-card__post div.reader-post-card__post-details div.reader-excerpt__content reader-excerpt')
                     author_url = None
                     author_name = None
                     author_group_name = None
                     author_blog_site = None
+                    author_blog_context = None
+
                     if author_urls:
                         author_url = "https://wordpress.com" + author_urls.get('href')
                     if author_img:
@@ -50,19 +52,13 @@ def main(keyword=None):
                         author_group_name = author_group.get_text()
                     if author_blog_sites:
                         author_blog_site = author_blog_sites.get('href')
+                    if author_blog_contexts:
+                        author_blog_context = author_blog_contexts.get_text()
 
-                    temp_page = context.new_page()
-                    if author_urls:
-                        temp_page.goto(author_url)
-                    
-                    tags = get_tags(temp_page.content())
-
-                    temp_page.close() 
-                    
                     if author_url != 'null' or author_url is not None:
                         authors.append({
                             "lead-name": author_name, 
-                            "context": tags,
+                            "context": author_blog_context,
                             "blog-name": author_group_name, 
                             "blog-url": author_blog_site, 
                             "wordpress-url": author_url
@@ -85,7 +81,7 @@ def main(keyword=None):
         except Exception as e:
             print(e)
 
-    return json.dumps(authors, indent=4)
+    return authors
 
 def get_tags(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
