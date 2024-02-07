@@ -158,7 +158,9 @@ def extract_profiles_data(profiles_markup):
 
         # extract name
         name_markup = soup.select("h1")[0]
-        profile["name"] = name_markup.get_text()
+        user_name = name_markup.get_text()
+        user_name = user_name.replace("\u00a0", "") # removes non-breaking space in name
+        profile["lead-name"] = user_name
 
         # extract blog
         if soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset"):
@@ -167,7 +169,9 @@ def extract_profiles_data(profiles_markup):
             profile["blog-name"] = blog_name_markup.get_text()
             # blog link
             blog_link_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")[0]
-            profile["blog-link"] = blog_link_markup.get("href")
+            blog_link = blog_link_markup.get("href")
+            blog_link = "/".join(blog_link.split("/", 3)[:3]) # truncates url to base domain
+            profile["blog-link"] = blog_link
 
         # extract profile links
         profile_links_markup = soup.select("#dialog6 div div a")
@@ -203,14 +207,5 @@ def main(search_query):
     #         print(f"{key}: {value}")
 
     profile_objects_json = json.dumps(combined_profile_objects, indent=4)
-    print(profile_objects_json)
 
     return profile_objects_json
-
-#####################
-### Start Scraper ###
-#####################
-
-if __name__ == "__main__":
-    test_query = "blockchain"
-    main(test_query)
