@@ -66,6 +66,7 @@ def main_cli():
 
     console.print(f"Selected length: [bold green]{message_length if message_length is not None else 'No limit'}[/bold green]")
     console.print(f"Message purpose: [bold green]{message_purpose}[/bold green]")
+    console.print(f"Message context: [bold green]{user_context}[/bold green]")
     console.print(f"Selected tone: [bold green]{message_tone}[/bold green]")
     
     cli_data = {
