@@ -1,8 +1,8 @@
 import json
 import os
 
-def add_to_leads(json_data, origin_str):
-  leads_json_path = 'pseudobase/leads.json'
+def add_to_leads(json_data, origin_str, keyword, refresh=False):
+  leads_json_path = f'pseudobase/leads_data/{keyword}_leads.json'
   if os.path.exists(leads_json_path):
     with open(leads_json_path, 'r') as leads:
       leads_data = json.load(leads)
@@ -11,8 +11,10 @@ def add_to_leads(json_data, origin_str):
   
   for lead_obj in json_data:
     lead_obj['origin'] = origin_str
-  
-  leads_data.extend(json_data)
+  if refresh:
+     leads_data = json_data
+  else:
+    leads_data.extend(json_data)
 
   with open(leads_json_path, 'w') as leads:
     json.dump(leads_data, leads, indent=4)
