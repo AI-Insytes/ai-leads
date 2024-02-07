@@ -24,12 +24,10 @@ def search_leads(keyword, sources):
 
     if sources["wordpress"]:
         wordpress_results = wordpress_search(keyword)
-        print(wordpress_results)
         add_to_leads(wordpress_results, "WordPress", keyword)
-    # if sources["substack"]:
-        # substack_results = substack_search(keyword)
-        # print(substack_results)
-        # add_to_leads(substack_results, "Substack", keyword)
+    if sources["substack"]:
+        substack_results = substack_search(keyword)
+        add_to_leads(substack_results, "Substack", keyword)
 
 def search_main(input_keyword):
     """
