@@ -1,6 +1,7 @@
-# file_utils.py
-
+from rich.console import Console
 import os
+
+console = Console()
 
 def save_to_file(content, relative_directory, filename):
     """
@@ -13,7 +14,7 @@ def save_to_file(content, relative_directory, filename):
     filepath = os.path.join(full_directory_path, filename)
     with open(filepath, 'w') as file:
         file.write(content)
-    print(f"Message saved to {filepath}")
+    console.print(f"Message saved to [bold green]{filepath}[/bold green]")
 
 def create_directory(directory_name):
     """

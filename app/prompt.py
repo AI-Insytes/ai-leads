@@ -1,5 +1,7 @@
 import llama2
 import requests
+import time
+from datetime import datetime
 import json
 from app import cli
 from app.file_utils import save_to_file, create_directory
@@ -8,6 +10,7 @@ from app.file_utils import save_to_file, create_directory
 def prompt_main(cli_data):
     
     message_purpose = cli_data['purpose']
+    lead_category = cli_data['query']
     lead_name = "Oluchi Enebeli"
     lead_context = "Oluchi Enebeli, a highly sought-after blockchain engineer in Africa"
     user_context = cli_data['context']
@@ -19,13 +22,18 @@ def prompt_main(cli_data):
     Objective: {message_purpose}
     Lead Name: {lead_name}
     Lead Context: {lead_context}
+    Lead Category: {lead_category}
     User Context: {user_context}
     Message Tone: {user_tone}
-    Please craft a personalized message for {lead_name}, incorporating the given objective, background, context and tone. Make this a total of {message_length} characters or less.
-    """    
+    Please craft a personalized message for {lead_name}, incorporating the given objective, background, context, tone, and lead category. The lead category is the industry or area of expertise the user is looking for connections in. Make this message a total of {message_length} characters or less. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message.
+    """
+    
+    start_time = datetime.now()
+    print("Drafting your customized message...")    
     
     # API endpoint URL
     url = "http://localhost:11434/api/generate"
+    # url = "https://ol.bohio.me/api/generate" # external endpoint
       
 
     # Replace these variables with your own values
@@ -47,11 +55,12 @@ def prompt_main(cli_data):
 
     # Sending post request to the API
     response = requests.post(url, data=json.dumps(data), headers=headers)
+    
+    
+    try:
 
-    # Checking if the request was successful
-    if response.status_code == 200:
+        # Checking if the request was successful
         # Parsing the JSON response
-        print("Drafting your customized message...")
         response_data = response.json()
         draft_message = response_data.get("response")
         print("Draft Message:", draft_message)
@@ -66,8 +75,14 @@ def prompt_main(cli_data):
         # save the message to the specified file
         save_to_file(draft_message, directory_name, filename)
         
-    else:
+        end_time = datetime.now()  # End timing after the run is complete
+        duration = (end_time - start_time).total_seconds()
+        print(f"\nAI response time: {duration} seconds")
+        
+        
+    except Exception as e:
         print("Failed to get response from the API. Status code:", response.status_code)
+        print(f'An error occurred: {e}')
     
 if __name__ == '__main__':
     prompt_main()
