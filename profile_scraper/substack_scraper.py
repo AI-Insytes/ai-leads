@@ -11,7 +11,7 @@ def people_search_profiles(search_query):
 
     with sync_playwright() as p:
         # setup
-        browser = p.chromium.launch(headless=False, slow_mo=1000)
+        browser = p.chromium.launch(slow_mo=1000)
         page = browser.new_page()
         page.goto("https://substack.com/home")
 
@@ -54,7 +54,7 @@ def get_profile_from_publication(publication_link):
     # go to the about page for blog and extract markup containing profile link(s)
     with sync_playwright() as p:
         # setup
-        browser = p.chromium.launch(headless=False, slow_mo=1000)
+        browser = p.chromium.launch(slow_mo=1000)
         page = browser.new_page()
         page.goto(publication_link)
 
@@ -87,7 +87,7 @@ def get_profile_from_publication(publication_link):
         # go to profile page
         with sync_playwright() as p:
             # setup
-            browser = p.chromium.launch(headless=False, slow_mo=1000)
+            browser = p.chromium.launch(slow_mo=1000)
             page = browser.new_page()
             page.goto(link)  
 
@@ -111,7 +111,7 @@ def publication_search_profiles(search_query):
 
     with sync_playwright() as p:
         # setup
-        browser = p.chromium.launch(headless=False, slow_mo=1000)
+        browser = p.chromium.launch(slow_mo=1000)
         page = browser.new_page()
         page.goto("https://substack.com/home")
 
