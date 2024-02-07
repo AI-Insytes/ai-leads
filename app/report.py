@@ -2,11 +2,12 @@ import json
 import csv
 import os
 
-json_file_path = 'profile_scraper/scraper_outputs/data.json'
+
 csv_file_path = 'profile_scraper/scraper_outputs/report.csv'
 
-def main_report():
+def main_report(keyword):
     # Read the JSON file
+    json_file_path = f'pseudobase/leads_data/{keyword}_data.json'
     with open(json_file_path, 'r') as json_file:
         data = json.load(json_file)
 
