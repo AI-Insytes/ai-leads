@@ -1,12 +1,17 @@
 from app.prompt import prompt_main
-from app.cli import main_cli
+from app.cli import main_cli, get_search_query
 from app.report import main_report
+import asyncio
+from app.search import search_main
 
-def main():
-    cli_data = main_cli()
+async def main():
+    keyword = get_search_query()
+    scraper_task = asyncio.create_task(search_main(keyword))
+    cli_data = main_cli(keyword)
+    await scraper_task
     prompt_main(cli_data)
-    main_report(cli_data['query'])
-    
+    # main_report(keyword)
+
 
 if __name__ == "__main__":
-    main()
+    asyncio.run(main())

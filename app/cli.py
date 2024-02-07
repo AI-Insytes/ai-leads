@@ -64,8 +64,8 @@ def get_message_tone():
     }
     return tone_mapping[user_choice]
 
-def main_cli():
-    lead_category = get_search_query()
+
+def main_cli(lead_category=None):
     #run scrape_leads(user_response)
     message_length = get_message_length()
     message_purpose = get_message_purpose()
