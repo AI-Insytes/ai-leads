@@ -19,4 +19,4 @@ def scrape_leads(keyword, wordpress=True, substack=True):
 
 
 test_keyword = "blockchain"
-scrape_leads()
+scrape_leads(test_keyword)
