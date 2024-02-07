@@ -1,4 +1,5 @@
 import os
+import json
 from profile_scraper.wordpress_scraper import main as wordpress_search
 from profile_scraper.substack_scraper import main as substack_search
 from pseudobase.pseudobase import add_to_leads
@@ -26,7 +27,7 @@ def search_leads(keyword, sources):
     if sources["wordpress"]:
         wordpress_results = wordpress_search(keyword)
         search_results.append(wordpress_results)
-        add_to_leads(wordpress_results, "WordPress", keyword)
+        # add_to_leads(wordpress_results, "WordPress", keyword)
     # if sources["substack"]:
     #     substack_results = substack_search(keyword)
     #     search_results.append(substack_results)
@@ -70,7 +71,8 @@ def search_main(input_keyword):
     print(search_results)
 
 
-### Test ###################
-test_keywords = "blockchain"
-search_main(test_keywords)
-############################
+### Test #######################
+if __name__ == "__main__":
+    test_keywords = "blockchain"
+    search_main(test_keywords)
+################################
