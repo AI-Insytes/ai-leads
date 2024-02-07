@@ -35,6 +35,7 @@ def main(keyword=None):
                     author_group = article.select_one('div.reader-post-card__byline-details div.reader-post-card__byline-site a.reader-post-card__site.reader-post-card__link')
                     author_blog_sites = article.select_one('div.reader-post-card__byline-details div.reader-post-card__author-and-timestamp span.reader-post-card__byline-secondary a.reader-post-card__byline-secondary-item:nth-last-of-type(2)')
                     author_blog_contexts = article.select_one('div.reader-post-card__post div.reader-post-card__post-details div.reader-excerpt__content.reader-excerpt')
+
                     author_url = None
                     author_name = None
                     author_group_name = None
@@ -52,7 +53,7 @@ def main(keyword=None):
                     if author_blog_contexts:
                         author_blog_context = author_blog_contexts.get_text()
 
-                    if author_url != 'null' or author_url is not None:
+                    if author_blog_site != 'null' and author_blog_site is not None:
                         authors.append({
                             "lead-name": author_name, 
                             "context": author_blog_context,
