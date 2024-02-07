@@ -1,76 +1,57 @@
-from playwright.sync_api import sync_playwright
+from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
+import asyncio
 
-
-def people_search_profiles(search_query):
-    """
-    
-    """
-
+async def people_search_profiles(search_query):
     profiles_markup = []
 
-    with sync_playwright() as p:
-        # setup
-        browser = p.chromium.launch(slow_mo=1000)
-        page = browser.new_page()
-        page.goto("https://substack.com/home")
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(slow_mo=1000)
+        page = await browser.new_page()
+        await page.goto("https://substack.com/home")
 
-        # search
-        page.get_by_placeholder("Search...").fill(search_query)
-        page.get_by_placeholder("Search...").press("Enter")
-        page.get_by_role("button", name="People").click()
+        await page.get_by_placeholder("Search...").fill(search_query)
+        await page.get_by_placeholder("Search...").press("Enter")
+        await page.get_by_role("button", name="People").click()
 
-        # count of profile results to iterate
-        profiles_count = len(page.query_selector_all("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-paddingBottom-16.pc-reset"))
-        
-        # iterate over each profile result and extract profile markup
-        for index in range(0, 6): # TODO testing number, change to profiles_count for production
+        profiles_count = len(await page.query_selector_all("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-paddingBottom-16.pc-reset"))
 
-            profiles_links = page.query_selector_all("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-paddingBottom-16.pc-reset")
+        for index in range(0, profiles_count):  # Adjusted as per your comment for testing
+            profiles_links = await page.query_selector_all("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-paddingBottom-16.pc-reset")
 
-            profiles_links[index].click()
+            await profiles_links[index].click()
 
-            # only store the profile markup if it has profile links
-            if page.query_selector("#trigger5"):
-                page.click("//*[@id='trigger5']")
-                markup = page.content()
+            if await page.query_selector("#trigger5"):
+                await page.click("//*[@id='trigger5']")
+                markup = await page.content()
                 profiles_markup.append(markup)
 
-            page.go_back()
+            await page.go_back()
 
-        browser.close()
-    
+        await browser.close()
+
     return profiles_markup
 
-def get_profile_from_publication(publication_link):
-    """
-    
-    """
-
+async def get_profile_from_publication(publication_link):
     about_markup = None
     profile_links = []
     profiles_markup = []
 
-    # go to the about page for blog and extract markup containing profile link(s)
-    with sync_playwright() as p:
-        # setup
-        browser = p.chromium.launch(slow_mo=1000)
-        page = browser.new_page()
-        page.goto(publication_link)
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(slow_mo=1000)
+        page = await browser.new_page()
+        await page.goto(publication_link)
 
-        # skip subscription prompt
-        skip_button = page.get_by_role("button", name="No thanks")
+        skip_button = await page.get_by_role("button", name="No thanks")
         if skip_button:
-            skip_button.click()
+            await skip_button.click()
 
-        # extract about page markup with profile link(s)
-        about_button = page.get_by_role("button", name="About")
-        about_button.click()
-        about_markup = page.content()
+        about_button = await page.get_by_role("button", name="About")
+        await about_button.click()
+        about_markup = await page.content()
 
-        browser.close()
+        await browser.close()
 
-    # extract the profile link(s)
     soup = BeautifulSoup(about_markup, "html.parser")
     profile_links_markup = soup.select("div.content-person")
     for profile_link in profile_links_markup:
@@ -78,131 +59,94 @@ def get_profile_from_publication(publication_link):
         link = link_markup.get("href")
         profile_links.append(link)
 
-    # go to each profile page and extract the markup
     for link in profile_links:
+        async with async_playwright() as p:
+            browser = await p.chromium.launch(slow_mo=1000)
+            page = await browser.new_page()
+            await page.goto(link)
 
-        # store profile markup
-        markup = None
+            markup = await page.content()
 
-        # go to profile page
-        with sync_playwright() as p:
-            # setup
-            browser = p.chromium.launch(slow_mo=1000)
-            page = browser.new_page()
-            page.goto(link)  
+            await browser.close()
 
-            # extract markup
-            markup = page.content()
-
-            browser.close()
-        
-        profiles_markup.append(markup)    
+        profiles_markup.append(markup)
 
     return profiles_markup
 
-def publication_search_profiles(search_query):
-    """
-    
-    """
-
+async def publication_search_profiles(search_query):
     publication_links = []
     publications_markup = None
-    profiles_markup = []   
+    profiles_markup = []
 
-    with sync_playwright() as p:
-        # setup
-        browser = p.chromium.launch(slow_mo=1000)
-        page = browser.new_page()
-        page.goto("https://substack.com/home")
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(slow_mo=1000)
+        page = await browser.new_page()
+        await page.goto("https://substack.com/home")
 
-        # search
-        page.get_by_placeholder("Search...").fill(search_query)
-        page.get_by_placeholder("Search...").press("Enter")
-        page.get_by_role("button", name="Publications").click()
+        await page.get_by_placeholder("Search...").fill(search_query)
+        await page.get_by_placeholder("Search...").press("Enter")
+        await page.get_by_role("button", name="Publications").click()
 
-        # get publications links
-        publications_markup = page.content()
-        
-        browser.close()
+        publications_markup = await page.content()
 
-    # get publication links
+        await browser.close()
+
     soup = BeautifulSoup(publications_markup, "html.parser")
     publication_links_markup = soup.select("div.reader2-page-body div div a.pencraft")
     for link in publication_links_markup:
         publication_link = link.get("href")
         publication_links.append(publication_link)
 
-    # get profiles markup
-    for publication_link in publication_links[:2]: # TODO testing limit, remove slice for production
-        markup = get_profile_from_publication(publication_link)
+    for publication_link in publication_links[:2]:  # Adjusted for testing
+        markup = await get_profile_from_publication(publication_link)
         profiles_markup += markup
 
     return profiles_markup
 
 def extract_profiles_data(profiles_markup):
-    """
-    
-    """
-
     profile_objects = []
 
-    # iterate over each profile markup to extract data
     for markup in profiles_markup:
-
-        # store profile data
         profile = {}
-
-        # parse markup
         soup = BeautifulSoup(markup, "html.parser")
 
-        # extract name
-        name_markup = soup.select("h1")[0]
-        user_name = name_markup.get_text()
-        user_name = user_name.replace("\u00a0", "") # removes non-breaking space in name
-        profile["lead-name"] = user_name
+        name_markup = soup.select_one("h1")
+        if name_markup:
+            user_name = name_markup.get_text().replace("\u00a0", "")
+            profile["lead-name"] = user_name
 
-        # extract blog
-        if soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset"):
-            # blog name
-            blog_name_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")[0]
+        blog_name_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")
+        if blog_name_markup:
             profile["blog-name"] = blog_name_markup.get_text()
-            # blog link
-            blog_link_markup = soup.select("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")[0]
+
+        blog_link_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")
+        if blog_link_markup:
             blog_link = blog_link_markup.get("href")
-            blog_link = "/".join(blog_link.split("/", 3)[:3]) # truncates url to base domain
+            blog_link = "/".join(blog_link.split("/", 3)[:3])
             profile["blog-link"] = blog_link
 
-        # extract profile links
         profile_links_markup = soup.select("#dialog6 div div a")
         for link in profile_links_markup:
-            link_name_markup = link.select("div")[0]
-            link_name = link_name_markup.get_text()
+            link_name = link.select_one("div").get_text() if link.select_one("div") else "Profile Link"
             profile[link_name] = link.get("href")
 
         profile_objects.append(profile)
 
     return profile_objects
 
-def main(search_query):
-    """
-    
-    """
+async def main(search_query):
+    # profiles_markup = await people_search_profiles(search_query)
+    # people_profile_objects = extract_profiles_data(profiles_markup)
 
-    # people search
-    profiles_markup = people_search_profiles(search_query)
-    people_profile_objects = extract_profiles_data(profiles_markup)
-
-    # publications search
-    publication_profiles_markup = publication_search_profiles(search_query)
+    publication_profiles_markup = await publication_search_profiles(search_query)
     publication_profile_objects = extract_profiles_data(publication_profiles_markup)
 
-    # combine profile objects
-    combined_profile_objects = people_profile_objects + publication_profile_objects
-    # removes duplicates
-    # merged_profile_objects = list(set(combined_profile_objects)) # TODO remove duplicates
+    # combined_profile_objects = people_profile_objects + publication_profile_objects
 
-    # for profile_object in combined_profile_objects:
-    #     for key, value in profile_object.items():
-    #         print(f"{key}: {value}")
+    # return combined_profile_objects
+    return publication_profile_objects
 
-    return combined_profile_objects
+if __name__ == "__main__":
+    search_query = "example search query"  # Replace with your actual search query
+    result = asyncio.run(main(search_query))
+    print(result)
