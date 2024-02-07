@@ -2,6 +2,7 @@ import json
 from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 import asyncio
+
 async def main(keyword=None):
     authors = []
     async with async_playwright() as p:
@@ -15,14 +16,19 @@ async def main(keyword=None):
         try:
             context = await browser.new_context()
             page = await context.new_page()
+
             if keyword:
                 await page.goto(f'https://wordpress.com/read/search?q={keyword}&sort=relevance')
             else:
                 await page.goto('https://wordpress.com/discover')
             await page.wait_for_timeout(2000)
             prev_scroll_height = await page.evaluate('document.body.scrollHeight') / 2
+
+
             while len(authors) < 20:
                 html_content = await page.content()
+
+
                 soup = BeautifulSoup(html_content, 'html.parser')
                 articles = soup.select('article')
                 for article in articles:
@@ -54,6 +60,7 @@ async def main(keyword=None):
                             "blog-url": author_blog_site,
                             "wordpress-url": author_url
                         })
+
                 await page.evaluate(f'window.scrollTo(0, {prev_scroll_height} + 100)')
                 await page.wait_for_timeout(500)
                 more_articles = await page.query_selector_all('article')
@@ -65,12 +72,19 @@ async def main(keyword=None):
                     print("No more content loaded.")
                     break
                 prev_scroll_height = current_scroll_height
+
             await context.close()
+
+
         except Exception as e:
             print(e)
     return authors
+
+
 async def run():
     authors_data = await main('Blockchain')  # keyword can be inputted
     print(authors_data)
+
+
 if __name__ == "__main__":
     asyncio.run(run())
