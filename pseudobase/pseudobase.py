@@ -53,9 +53,6 @@ def add_message_to_lead(keyword, generated_message):
       leads_data = json.load(leads)
   else:
     raise Exception('Path Does Not Exist')
-  
-  with open(leads_json_path, 'r') as leads:
-     leads_data = json.load(leads)
 
   for lead in leads_data:
       if 'generated-messages' in lead:
@@ -65,7 +62,6 @@ def add_message_to_lead(keyword, generated_message):
       break
   with open(leads_json_path, 'w', encoding='utf-8') as leads:
      json.dump(leads_data, leads, indent=4, ensure_ascii=False)
-  pass
 
 
 ##########
