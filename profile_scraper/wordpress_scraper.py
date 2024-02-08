@@ -76,9 +76,9 @@ async def main(keyword=None):
                         author_blog_context = author_blog_contexts.get_text() 
 
                     if author_blog_site != 'null' and author_blog_site is not None: 
-                        authors.append({ 
-                            "lead-name": author_name,  
+                        authors.append({  
                             "context": author_blog_context, 
+                            "lead-name": author_name, 
                             "blog-name": author_group_name,  
                             "blog-url": author_blog_site,  
                             "wordpress-url": author_url 
