@@ -1,8 +1,21 @@
 import json
 import os
-import aiofiles  # Import aiofiles for async file operations
+import aiofiles 
 
 async def add_to_leads(json_data, origin_str, keyword, refresh=False):
+    """
+    Add new leads or refresh existing leads in the leads data file.
+
+    Args:
+        json_data (List[Dict]): List of dictionaries containing lead information.
+        origin_str (str): String indicating the origin or source of the leads.
+        keyword (str): Keyword associated with the leads, used to determine the leads data file.
+        refresh (bool, optional): If True, replaces existing leads with the provided json_data.
+            If False (default), appends json_data to the existing leads.
+
+    Returns:
+        None
+    """
     leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
     if os.path.exists(leads_json_path):
         async with aiofiles.open(leads_json_path, 'r', encoding='utf-8') as leads:
@@ -21,6 +34,19 @@ async def add_to_leads(json_data, origin_str, keyword, refresh=False):
         await leads.write(json.dumps(leads_data, indent=4, ensure_ascii=False))
 
 async def add_message_to_lead(keyword, generated_message):
+    """
+    Add a generated message to leads associated with a specific keyword.
+
+    Args:
+        keyword (str): Keyword associated with the leads, used to determine the leads data file.
+        generated_message (str): The generated message to be added.
+
+    Returns:
+        None
+
+    Raises:
+        Exception: Raised if the leads data file does not exist.
+    """
     leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
 
     if os.path.exists(leads_json_path):
