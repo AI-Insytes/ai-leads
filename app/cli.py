@@ -6,6 +6,12 @@ from aioconsole import ainput
 
 console = Console()
 
+async def get_user_name():
+    question = "What is your name?"
+    console.print(question, style="bold bright_magenta")
+    user_response = await ainput("> ")
+    return user_response
+
 
 async def get_search_query():
     question = "What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads."
@@ -67,6 +73,24 @@ async def get_message_tone():
         '4': 'Warm'
     }
     return tone_mapping[user_choice]
+
+async def profile_search_pref():
+    question = "Would you like to search for this person's LinkedIn profile?\n" \
+               "[1] Yes\n" \
+               "[2] No\n"
+    console.print(question, style="bold bright_magenta")
+    choices = ['1', '2']
+    while True:
+        user_choice = await ainput("> ")  # Await user input asynchronously
+        if user_choice in choices:
+            break
+        console.print("Please select a valid option.", style="bold red")
+
+    profile_mapping = {
+        '1': True,
+        '2': False,
+    }
+    return profile_mapping[user_choice]
 
 
 async def main_cli(lead_category=None):
