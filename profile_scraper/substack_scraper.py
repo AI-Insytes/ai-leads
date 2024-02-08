@@ -15,7 +15,7 @@ async def get_profiles_from_publication(publication_link):
 
     # go to the publication about page for blog and extract markup
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1000)
+        browser = await p.chromium.launch(slow_mo=500)
         page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
         await page.goto(publication_link)
 
@@ -48,7 +48,7 @@ async def get_profiles_from_publication(publication_link):
     # go to each profile page and extract the markup
     for link in profile_links:
         async with async_playwright() as p:
-            browser = await p.chromium.launch(slow_mo=1000)
+            browser = await p.chromium.launch(slow_mo=500)
             page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
             await page.goto(link)
 
@@ -71,7 +71,7 @@ async def publication_search_profiles(search_query):
 
     # go to the publications page and search matching newsletters
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=2000)
+        browser = await p.chromium.launch(slow_mo=1000)
         page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
         await page.goto("https://substack.com/home")
 
@@ -93,7 +93,7 @@ async def publication_search_profiles(search_query):
         publication_links.append(publication_link)
 
     # get profiles markup
-    for publication_link in publication_links[:10]:
+    for publication_link in publication_links[:5]:
         profile_data = await get_profiles_from_publication(publication_link)
         profiles_data.append(profile_data)
 
