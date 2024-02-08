@@ -3,6 +3,7 @@ from dotenv import load_dotenv
 import os
 import asyncio
 from pathlib import Path
+import csv
 
 # Specify the name of the environment file
 env_file_path = os.path.join(os.path.dirname(__file__), '..', '.env')
@@ -59,30 +60,37 @@ async def get_profile(lead_name, keyword):
             profile_url = profile_url.split('?')[0]
             if profile_url not in unique_urls:
                 unique_urls.add(profile_url)
-
-        # Print or process the top profile URL distinctly
-        if top_profile_url:
-            print(f"Top Profile URL: {top_profile_url}")
-
-        # Print or process the rest of the unique profile URLs
-        for url in unique_urls:
-            if url != top_profile_url:  # Avoid repeating the top profile
-                print(f"Profile URL: {url}")
                 
-        # Ensure the directory exists
-        output_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'leads_and_messages'))
-        os.makedirs(output_dir, exist_ok=True)
+        # Condition to check if profiles were found
+        if not unique_urls:
+            print(f"No profiles found for {lead_name} with keyword '{keyword}'.")
+            
+        else:
+            # Print or process the top profile URL distinctly
+            if top_profile_url:
+                print(f"Top Profile URL: {top_profile_url}")
 
-        
-        # Specify the output file path within the new directory
-        output_file_path = os.path.join(output_dir, "profile_urls.txt")        
-
-        # Write the unique profile URLs to the text file within the specified directory
-        with open(output_file_path, "w") as file:
-            file.write("Top Profile URL: " + top_profile_url + "\n\n")
+            # Print or process the rest of the unique profile URLs
             for url in unique_urls:
                 if url != top_profile_url:  # Avoid repeating the top profile
-                    file.write(url + "\n")
+                    print(f"Profile URL: {url}")
+                    
+            # Ensure the directory exists
+            output_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'leads_and_messages'))
+            os.makedirs(output_dir, exist_ok=True)
+
+            
+            # Specify the output file path within the new directory
+            output_file_path = os.path.join(output_dir, f"{lead_name.replace(' ', '_')}_profiles.txt")
+
+            # Write the unique profile URLs to the text file within the specified directory
+            with open(output_file_path, "w") as file:
+                file.write("Lead Name: " + lead_name + "\n")
+                file.write("Lead Search Query: " + keyword + "\n" )
+                file.write("Top Profile URL: " + top_profile_url + "\n\n")
+                for url in unique_urls:
+                    if url != top_profile_url:  # Avoid repeating the top profile
+                        file.write(url + "\n")
 
         # Close the browser
         await browser.close()
