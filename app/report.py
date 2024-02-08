@@ -28,7 +28,7 @@ def main_report(lead_category):
                 for key, value in item.items():
                     writer.writerow([key, value])
                 
-                # Optionally, add a blank row after each item for readability
+                # add a blank row after each item for readability
                 writer.writerow([])
 
     except Exception as e:

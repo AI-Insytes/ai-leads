@@ -3,7 +3,6 @@ import requests
 from datetime import datetime
 import time
 import json
-from app import cli
 from app.file_utils import save_to_file, create_directory
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
