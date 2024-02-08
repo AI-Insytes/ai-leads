@@ -2,35 +2,6 @@ from playwright.async_api import async_playwright
 from bs4 import BeautifulSoup
 import asyncio
 
-async def people_search_profiles(search_query):
-    profiles_markup = []
-
-    async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1000)
-        page = await browser.new_page()
-        await page.goto("https://substack.com/home")
-
-        await page.get_by_placeholder("Search...").fill(search_query)
-        await page.get_by_placeholder("Search...").press("Enter")
-        await page.get_by_role("button", name="People").click()
-
-        profiles_count = len(await page.query_selector_all("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-paddingBottom-16.pc-reset"))
-
-        for index in range(0, profiles_count):  # Adjusted as per your comment for testing
-            profiles_links = await page.query_selector_all("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-paddingBottom-16.pc-reset")
-
-            await profiles_links[index].click()
-
-            if await page.query_selector("#trigger5"):
-                await page.click("//*[@id='trigger5']")
-                markup = await page.content()
-                profiles_markup.append(markup)
-
-            await page.go_back()
-
-        await browser.close()
-
-    return profiles_markup
 
 async def get_profile_from_publication(publication_link):
     about_markup = None
@@ -38,15 +9,15 @@ async def get_profile_from_publication(publication_link):
     profiles_markup = []
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1000)
+        browser = await p.chromium.launch(slow_mo=1000, headless=False)
         page = await browser.new_page()
         await page.goto(publication_link)
 
-        skip_button = await page.get_by_role("button", name="No thanks")
+        skip_button = page.get_by_role("button", name="No thanks")
         if skip_button:
             await skip_button.click()
 
-        about_button = await page.get_by_role("button", name="About")
+        about_button = page.get_by_role("button", name="About")
         await about_button.click()
         about_markup = await page.content()
 
@@ -61,7 +32,7 @@ async def get_profile_from_publication(publication_link):
 
     for link in profile_links:
         async with async_playwright() as p:
-            browser = await p.chromium.launch(slow_mo=1000)
+            browser = await p.chromium.launch(slow_mo=1000, headless=False)
             page = await browser.new_page()
             await page.goto(link)
 
@@ -79,7 +50,7 @@ async def publication_search_profiles(search_query):
     profiles_markup = []
 
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1000)
+        browser = await p.chromium.launch(slow_mo=1000, headless=False)
         page = await browser.new_page()
         await page.goto("https://substack.com/home")
 
@@ -135,18 +106,14 @@ def extract_profiles_data(profiles_markup):
     return profile_objects
 
 async def main(search_query):
-    # profiles_markup = await people_search_profiles(search_query)
-    # people_profile_objects = extract_profiles_data(profiles_markup)
 
     publication_profiles_markup = await publication_search_profiles(search_query)
     publication_profile_objects = extract_profiles_data(publication_profiles_markup)
 
-    # combined_profile_objects = people_profile_objects + publication_profile_objects
-
-    # return combined_profile_objects
     return publication_profile_objects
 
+
 if __name__ == "__main__":
-    search_query = "example search query"  # Replace with your actual search query
+    search_query = "blockchain"  # Replace with your actual search query
     result = asyncio.run(main(search_query))
     print(result)
