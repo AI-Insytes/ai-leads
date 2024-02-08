@@ -14,8 +14,10 @@ async def get_user_name():
 
 
 async def get_search_query():
-    question = "What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads."
+    question = "What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads using a keyword format."
+    instruction = "You can search for multiple keywords separated by SPACES. Too many keywords (3+) will greatly limit the amount and/or quality of suggested leads."
     console.print(question, style="bold bright_magenta")
+    console.print(instruction, style="dim")
     user_response = await ainput("> ")
     return user_response
 

@@ -5,6 +5,8 @@ from app.report import main_report
 import asyncio
 from app.search import search_main
 from app.linked_in_search import get_profile
+import re
+
 
 async def main():
     user_name = await get_user_name()
@@ -13,11 +15,13 @@ async def main():
     cli_data = await main_cli(keyword)
     await scraper_task
     
-    lead_name = await get_lead_name(keyword)
-    lead_context = await get_lead_context(keyword)
+    leads_data_file_name = re.sub(r'[^a-zA-Z0-9]+', '_', keyword)
+
+    lead_name = await get_lead_name(leads_data_file_name)
+    lead_context = await get_lead_context(leads_data_file_name)
     
     prompt_main(cli_data, lead_context, lead_name, user_name)
-    main_report(keyword)
+    main_report(leads_data_file_name)
     pref = await profile_search_pref()
     await get_profile(pref, lead_name, keyword)
 

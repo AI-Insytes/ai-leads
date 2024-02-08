@@ -4,10 +4,10 @@ import os
 from app.file_utils import save_to_file, create_directory
 from pathlib import Path
 
-def main_report(lead_category):
+def main_report(leads_data_file_name):
 
     base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
-    json_file_name = f"{lead_category}_leads.json"
+    json_file_name = f"{leads_data_file_name}_leads.json"
     json_file_path = base_dir / json_file_name
 
     csv_file_path = Path(__file__).resolve().parent.parent / "leads_and_messages" / "leads_report.csv"
