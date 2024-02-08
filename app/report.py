@@ -7,7 +7,7 @@ from pathlib import Path
 def main_report(lead_category):
 
     base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
-    json_file_name = f"{lead_category}_leads.json"
+    json_file_name = f"{lead_category.replace(' ', '')}_leads.json"
     json_file_path = base_dir / json_file_name
 
     csv_file_path = Path(__file__).resolve().parent.parent / "leads_and_messages" / "leads_report.csv"
