@@ -11,11 +11,11 @@ from concurrent.futures import ThreadPoolExecutor
 import asyncio
 
 
-def prompt_main(cli_data, lead_context):
+def prompt_main(cli_data, lead_context, lead_name):
     
     message_purpose = cli_data['purpose']
     lead_category = cli_data['query']
-    lead_name = "Oluchi Enebeli"
+    lead_name = lead_name or "JB"
     lead_context = lead_context or "Blockchain"
     user_context = cli_data['context']
     user_tone = cli_data['tone']
@@ -29,6 +29,7 @@ def prompt_main(cli_data, lead_context):
     Lead Category: {lead_category}
     User Context: {user_context}
     Message Tone: {user_tone}
+    Message Length: {message_length}
     Please craft a personalized message for {lead_name}, incorporating the given objective, background, context, tone, and lead category. The lead category is the industry or area of expertise the user is looking for connections in. Make this message a total of {message_length} characters or less. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message.
     """
     
@@ -106,23 +107,42 @@ async def get_lead_context(lead_category):
         for lead in leads:
             context = lead.get("context")
             if context:
+                # print(context)
                 return context  # Return the first context found
 
     return None  # Return None if no context is found
+
+async def get_lead_name(lead_category):
+    # Dynamically determine the base directory
+    base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
+
+    file_name = f"{lead_category}_leads.json"
+    file_path = base_dir / file_name
+
+    # Define a synchronous function to read the file
+    def read_file_sync(path):
+        try:
+            with open(path, 'r', encoding='utf-8') as file:
+                return json.load(file)
+        except FileNotFoundError:
+            print(f"The file {file_name} was not found.")
+        except json.JSONDecodeError:
+            print(f"There was an error decoding the JSON from the file {file_name}.")
+        return None
 
     # Use run_in_executor to run the synchronous file read operation in a thread pool
     loop = asyncio.get_running_loop()
     leads = await loop.run_in_executor(ThreadPoolExecutor(), read_file_sync, file_path)
 
     if leads:
+        # Assuming you want to return the name of the first lead
         for lead in leads:
-            context = lead.get("context")
-            if context:
-                print(context)
-                return context  # Return the first context found
+            lead_name = lead.get("lead-name")  # Use the correct key based on your JSON structure
+            if lead_name:
+                # print(lead_name)
+                return lead_name  # Return the first lead name found
 
-    return None  # Return None if no context is found
-        
+    return None  # Return None if no lead name is found
 
 if __name__ == '__main__':
     prompt_main()
