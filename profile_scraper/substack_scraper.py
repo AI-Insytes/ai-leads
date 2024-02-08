@@ -72,7 +72,7 @@ async def publication_search_profiles(search_query):
     # go to the publications page and search matching newsletters
     async with async_playwright() as p:
         browser = await p.chromium.launch(slow_mo=1000)
-        page = await browser.new_page()
+        page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
         await page.goto("https://substack.com/home")
 
         # search
