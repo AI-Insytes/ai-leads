@@ -10,7 +10,7 @@ import asyncio
 import sys
 
 
-def prompt_main(cli_data, lead_context, lead_name):
+def prompt_main(cli_data, lead_context, lead_name, user_name):
     
     message_purpose = cli_data['purpose']
     lead_category = cli_data['query']
@@ -23,6 +23,7 @@ def prompt_main(cli_data, lead_context, lead_name):
     # Crafting the prompt
     prompt = f"""
     Objective: {message_purpose}
+    User Name: {user_name}
     Lead Name: {lead_name}
     Lead Context: {lead_context}
     Lead Category: {lead_category}
@@ -30,7 +31,7 @@ def prompt_main(cli_data, lead_context, lead_name):
     Message Tone: {user_tone}
     Message Length: {message_length} characters or less
     
-    Please craft a short personalized message for {lead_name}, incorporating the given objective, background, context, tone, lead category, and message length. The lead category is the industry or area of expertise the user is looking for connections in. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message.
+    Please craft a short personalized message for {lead_name}, incorporating the given objective, background, context, tone, lead category, and message length. The lead category is the industry or area of expertise the user is looking for connections in. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message with the {user_name}.
     
     Limit the length of the message to {message_length} characters.
     """
