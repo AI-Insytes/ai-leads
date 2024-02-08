@@ -15,12 +15,12 @@ async def get_profiles_from_publication(publication_link):
 
     # go to the publication about page for blog and extract markup
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1500)
-        page = await browser.new_page()
+        browser = await p.chromium.launch(slow_mo=1000)
+        page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
         await page.goto(publication_link)
 
         # skip subscription prompt
-        skip_button = page.get_by_role("button", name="No thanks")
+        skip_button = await page.query_selector("button.maybe-later")
         if skip_button:
             await skip_button.click()
 
@@ -49,7 +49,7 @@ async def get_profiles_from_publication(publication_link):
     for link in profile_links:
         async with async_playwright() as p:
             browser = await p.chromium.launch(slow_mo=1000)
-            page = await browser.new_page()
+            page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
             await page.goto(link)
 
             markup = await page.content()
@@ -91,9 +91,9 @@ async def publication_search_profiles(search_query):
     for link in publication_links_markup:
         publication_link = link.get("href")
         publication_links.append(publication_link)
-
+    print("1st part done")
     # get profiles markup
-    for publication_link in publication_links:
+    for publication_link in publication_links[:10]:
         profile_data = await get_profiles_from_publication(publication_link)
         profiles_data.append(profile_data)
 
@@ -121,14 +121,19 @@ def extract_profiles_data(profiles_data):
                 user_name = name_markup.get_text().replace("\u00a0", "")
                 profile["lead-name"] = user_name
 
-            # extract blog name
+            # extract newsletter name
             blog_name_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")
             if blog_name_markup:
                 blog_name = blog_name_markup.get_text()
                 profile["blog-name"] = blog_name
                 profile["context"] += f"Newsletter Name: {blog_name}"
 
-            # extract blog link
+            # extract newsletter summary
+            summary_markup = soup.select_one("div.reader2-paragraph.reader2-secondary.reader2-clamp-lines.reader2-3-lines.description")
+            newsletter_summary = summary_markup.get_text()
+            profile["context"] += f"Newsletter Summary: {newsletter_summary}"
+
+            # extract newsletter link
             blog_link_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")
             if blog_link_markup:
                 blog_link = blog_link_markup.get("href")
