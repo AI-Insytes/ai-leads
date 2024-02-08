@@ -15,6 +15,9 @@ async def add_to_leads(json_data, origin_str, keyword, refresh=False):
 
     Returns:
         None
+
+    Outputs:
+        Sends files to ./pseudobase/leads_data/
     """
     leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
     if os.path.exists(leads_json_path):
@@ -29,13 +32,15 @@ async def add_to_leads(json_data, origin_str, keyword, refresh=False):
         leads_data = json_data
     else:
         leads_data.extend(json_data)
+    
+    sorted_data = await filter_leads(leads_data)
 
     async with aiofiles.open(leads_json_path, 'w', encoding='utf-8') as leads:
-        await leads.write(json.dumps(leads_data, indent=4, ensure_ascii=False))
+        await leads.write(json.dumps(sorted_data, indent=4, ensure_ascii=False))
 
-async def add_message_to_lead(keyword, generated_message):
+async def add_generic_to_leads(keyword, generated_message):
     """
-    Add a generated message to leads associated with a specific keyword.
+    Add a generic generated message to leads associated with a specific keyword.
 
     Args:
         keyword (str): Keyword associated with the leads, used to determine the leads data file.
@@ -56,10 +61,69 @@ async def add_message_to_lead(keyword, generated_message):
         raise Exception('Path Does Not Exist')
 
     for lead in leads_data:
-        if 'generated-messages' in lead:
-            lead['generated-messages'].append(generated_message)
+        if 'generic-messages' in lead:
+            lead['generic-messages'].append(generated_message)
         else:
-            lead['generated-messages'] = [generated_message]
+            lead['generic-messages'] = [generated_message]
         break
     async with aiofiles.open(leads_json_path, 'w', encoding='utf-8') as leads:
         await leads.write(json.dumps(leads_data, indent=4, ensure_ascii=False))
+
+async def add_message_to_lead(keyword, name, generated_message):
+    """
+    Add a generated message to leads associated with a specific keyword and name.
+
+    Args:
+        keyword (str): Keyword associated with the leads, used to determine the leads data file.
+        name (str): Name (lead-name or blog-name) to identify the lead object.
+        generated_message (str): The generated message to be added.
+
+    Returns:
+        None
+
+    Raises:
+        Exception: Raised if the leads data file does not exist.
+    """
+    leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
+    
+    if os.path.exists(leads_json_path):
+        async with aiofiles.open(leads_json_path, 'r', encoding='utf-8') as leads:
+            leads_data = json.loads(await leads.read())
+    else:
+        raise Exception('File Does Not Exist')
+    
+    found_lead = None
+    for lead in leads_data:
+        if lead.get('lead-name') == name or lead.get('blog-name') == name:
+            found_lead = lead
+            break
+    if found_lead:
+        if 'generated-messages' in found_lead:
+            found_lead['generated-messages'].append(generated_message)
+        else:
+            found_lead['generated-messages'] = [generated_message]
+
+        async with aiofiles.open(leads_json_path, 'w', encoding='utf-8') as leads:
+            await leads.write(json.dumps(leads_data, indent=4, ensure_ascii=False))
+    else:
+        raise Exception(f'Lead with name "{name}" not found.')
+
+
+async def filter_leads(data):
+    """
+    Filter lead objects based on the presence of missing fields.
+
+    Args:
+        data (List[Dict]): List of dictionaries containing lead information.
+
+    Returns:
+        List[Dict]: Sorted list of lead objects. Objects with missing fields are placed at the end.
+    """
+    def has_missing_fields(lead_obj):
+        return any(value is None for value in lead_obj.values())
+    pushup_data = [lead_obj for lead_obj in data if not has_missing_fields(lead_obj)]
+    pushdown_data = [lead_obj for lead_obj in data if has_missing_fields(lead_obj)]
+
+    sorted_data = pushup_data + pushup_data
+
+    return sorted_data
