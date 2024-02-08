@@ -15,7 +15,7 @@ async def get_profiles_from_publication(publication_link):
 
     # go to the publication about page for blog and extract markup
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1000)
+        browser = await p.chromium.launch(slow_mo=1500)
         page = await browser.new_page()
         await page.goto(publication_link)
 
@@ -71,7 +71,7 @@ async def publication_search_profiles(search_query):
 
     # go to the publications page and search matching newsletters
     async with async_playwright() as p:
-        browser = await p.chromium.launch(slow_mo=1000)
+        browser = await p.chromium.launch(slow_mo=2000)
         page = await browser.new_page(java_script_enabled=True, user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36")
         await page.goto("https://substack.com/home")
 
@@ -93,7 +93,7 @@ async def publication_search_profiles(search_query):
         publication_links.append(publication_link)
 
     # get profiles markup
-    for publication_link in publication_links[:2]:  # Adjusted for testing
+    for publication_link in publication_links:
         profile_data = await get_profiles_from_publication(publication_link)
         profiles_data.append(profile_data)
 
@@ -153,7 +153,14 @@ async def main(search_query):
     
     """
 
+    # get the profile pages from relevant substack publications
     profiles_data = await publication_search_profiles(search_query)
+
+    # if the first request for data fails, try again
+    if profiles_data == []:
+        profiles_data = await publication_search_profiles(search_query)
+
+    # extract the data from the profile pages
     profile_objects = extract_profiles_data(profiles_data)
 
     return profile_objects
