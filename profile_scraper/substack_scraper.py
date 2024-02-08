@@ -91,7 +91,7 @@ async def publication_search_profiles(search_query):
     for link in publication_links_markup:
         publication_link = link.get("href")
         publication_links.append(publication_link)
-    print("1st part done")
+
     # get profiles markup
     for publication_link in publication_links[:10]:
         profile_data = await get_profiles_from_publication(publication_link)
@@ -121,6 +121,9 @@ def extract_profiles_data(profiles_data):
                 user_name = name_markup.get_text().replace("\u00a0", "")
                 profile["lead-name"] = user_name
 
+            # extract profile bio
+            # profile_bio_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-8.pc-minWidth-0.frontend-pencraft-Box-module__flexGrow--mx4xz.pc-reset")
+
             # extract newsletter name
             blog_name_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")
             if blog_name_markup:
@@ -129,9 +132,10 @@ def extract_profiles_data(profiles_data):
                 profile["context"] += f"Newsletter Name: {blog_name}"
 
             # extract newsletter summary
-            summary_markup = soup.select_one("div.reader2-paragraph.reader2-secondary.reader2-clamp-lines.reader2-3-lines.description")
-            newsletter_summary = summary_markup.get_text()
-            profile["context"] += f"Newsletter Summary: {newsletter_summary}"
+            # summary_markup = soup.select_one("div.reader2-paragraph.reader2-secondary.reader2-clamp-lines.reader2-3-lines.description")
+            # if summary_markup:
+            #     newsletter_summary = summary_markup.get_text()
+            #     profile["context"] += f"Newsletter Summary: {newsletter_summary}"
 
             # extract newsletter link
             blog_link_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")
