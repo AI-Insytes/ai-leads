@@ -99,16 +99,22 @@ async def get_lead_context(lead_category):
     file_name = f"{lead_category}_leads.json"
     file_path = base_dir / file_name
     
-    # Define a synchronous function to read the file
+    # Wait for file to be available and not empty
+    while not file_path.exists() or file_path.stat().st_size == 0:
+        print(f"Waiting for file {file_name} to be available...")
+        await asyncio.sleep(1)  # Sleep for a bit before retrying
+    
+    # Define a synchronous function to read the file, wrapped for async execution
     def read_file_sync(path):
         try:
             with open(path, 'r', encoding='utf-8') as file:
                 return json.load(file)
         except FileNotFoundError:
-            print(f"The file {file_name} was not found. Retrying...")
+            print(f"The file {file_name} was not found.")
+            return None
         except json.JSONDecodeError:
             print(f"There was an error decoding the JSON from the file {file_name}.")
-        return None
+            return None
 
     # Use run_in_executor to run the synchronous file read operation in a thread pool
     loop = asyncio.get_running_loop()
@@ -118,7 +124,6 @@ async def get_lead_context(lead_category):
         for lead in leads:
             context = lead.get("context")
             if context:
-                # print(context)
                 return context  # Return the first context found
 
     return None  # Return None if no context is found

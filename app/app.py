@@ -14,13 +14,10 @@ async def main():
     lead_name = await get_lead_name(keyword)
     lead_context = await get_lead_context(keyword)
     
-    if lead_name is None or lead_context is None:
-        print("Failed to fetch lead name or context. Exiting.")
-        return
-    
     prompt_main(cli_data, lead_context, lead_name)
     main_report(keyword)
 
 
 if __name__ == "__main__":
     asyncio.run(main())
+    
