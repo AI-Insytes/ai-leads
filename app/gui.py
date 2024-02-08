@@ -1,5 +1,8 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel, QLineEdit, QPushButton, QComboBox, QFrame, QStackedLayout, QStackedWidget
+import asyncio
+from app.search import search_main
+
 class Generation(QWidget):
     def __init__(self):
         super().__init__()
@@ -11,12 +14,12 @@ class Generation(QWidget):
         # first page
         first_layout = QVBoxLayout()
 
-        self.message_query_label = QLabel("What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads.")
-        self.message_query_input = QLineEdit(self)
+        self.keyword_query_label = QLabel("What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads.")
+        self.keyword_query_input = QLineEdit(self)
         submit_button = QPushButton("Submit", self)
         submit_button.clicked.connect(self.show_next_page)
-        first_layout.addWidget(self.message_query_label)
-        first_layout.addWidget(self.message_query_input)
+        first_layout.addWidget(self.keyword_query_label)
+        first_layout.addWidget(self.keyword_query_input)
         first_layout.addWidget(submit_button)
 
         first_layout_widget = QWidget()
@@ -63,9 +66,17 @@ class Generation(QWidget):
         self.setLayout(main_layout)
 
     def show_next_page(self):
-        message = self.message_query_input.text
+        keyword = self.keyword_query_input.text()
+        asyncio.run(self.start_search(keyword))
         self.stacked_widget.setCurrentIndex(1)
-        return message
+    
+    async def start_search(self, keyword):
+        scraper_task = asyncio.create_task(search_main(keyword))
+        await scraper_task
+
+    async def run_together(self, keyword):
+        tasks = [self.start_search(keyword)]
+        await asyncio.gather(*tasks)
 
     def submit_clicked(self):
         lead_category = self.message_query_input.text() 
