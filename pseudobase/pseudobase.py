@@ -1,6 +1,7 @@
 import json
 import os
 import aiofiles 
+import random
 
 async def add_to_leads(json_data, origin_str, keyword, refresh=False):
     """
@@ -124,6 +125,8 @@ async def filter_leads(data):
     pushup_data = [lead_obj for lead_obj in data if not has_missing_fields(lead_obj)]
     pushdown_data = [lead_obj for lead_obj in data if has_missing_fields(lead_obj)]
 
-    sorted_data = pushup_data + pushup_data
+    random.shuffle(pushup_data)
+
+    sorted_data = pushup_data + pushdown_data
 
     return sorted_data
