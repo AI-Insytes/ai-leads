@@ -28,7 +28,6 @@ async def search_main(input_keyword):
     Main async function to manage the leads search process.
     """
 
-    print("starting scrape")
     keyword = input_keyword.lower()
     sources = {
         "wordpress": True,
