@@ -2,6 +2,7 @@ import json
 import os
 import aiofiles 
 import random
+import re
 
 async def add_to_leads(json_data, origin_str, keyword, refresh=False):
     """
@@ -20,7 +21,7 @@ async def add_to_leads(json_data, origin_str, keyword, refresh=False):
     Outputs:
         Sends files to ./pseudobase/leads_data/
     """
-    leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
+    leads_json_path = create_file_path(keyword)
     if os.path.exists(leads_json_path):
         async with aiofiles.open(leads_json_path, 'r', encoding='utf-8') as leads:
             leads_data = json.loads(await leads.read())
@@ -53,7 +54,7 @@ async def add_generic_to_leads(keyword, generated_message):
     Raises:
         Exception: Raised if the leads data file does not exist.
     """
-    leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
+    leads_json_path = create_file_path(keyword)
 
     if os.path.exists(leads_json_path):
         async with aiofiles.open(leads_json_path, 'r', encoding='utf-8') as leads:
@@ -85,7 +86,7 @@ async def add_message_to_lead(keyword, name, generated_message):
     Raises:
         Exception: Raised if the leads data file does not exist.
     """
-    leads_json_path = os.path.join('pseudobase', 'leads_data', f'{keyword}_leads.json')
+    leads_json_path = create_file_path(keyword)
     
     if os.path.exists(leads_json_path):
         async with aiofiles.open(leads_json_path, 'r', encoding='utf-8') as leads:
@@ -122,11 +123,29 @@ async def filter_leads(data):
     """
     def has_missing_fields(lead_obj):
         return any(value is None for value in lead_obj.values())
+    
     pushup_data = [lead_obj for lead_obj in data if not has_missing_fields(lead_obj)]
     pushdown_data = [lead_obj for lead_obj in data if has_missing_fields(lead_obj)]
 
     random.shuffle(pushup_data)
 
+    seen_names = set()
+    unique_pushup_data = []
+    for lead_obj in pushup_data:
+        name = lead_obj.get('lead-name') or lead_obj.get('blog-name')
+        context = lead_obj.get('context')
+
+        if name not in seen_names or (context is not None and name in seen_names):
+            seen_names.add(name)
+            unique_pushup_data.append(lead_obj)
+
     sorted_data = pushup_data + pushdown_data
 
     return sorted_data
+
+def create_file_path(keyword):
+    sanitized_keyword = re.sub(r'[^a-zA-Z0-9]+', '_', keyword)
+    
+    leads_json_path = os.path.join('pseudobase', 'leads_data', f'{sanitized_keyword}_leads.json')
+    
+    return leads_json_path
