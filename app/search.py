@@ -23,6 +23,10 @@ async def search_leads(keyword, sources):
         substack_results = await substack_search(keyword)
         await add_to_leads(substack_results, "Substack", keyword)
 
+async def search_message():
+
+    print("Searching for leads...")
+
 async def search_main(input_keyword):
     """
     Main async function to manage the leads search process.

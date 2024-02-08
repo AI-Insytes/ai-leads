@@ -3,7 +3,7 @@ from app.cli import main_cli, get_search_query, get_user_name, profile_search_pr
 from app.prompt import get_lead_context, get_lead_name
 from app.report import main_report
 import asyncio
-from app.search import search_main
+from app.search import search_main, search_message
 from app.linked_in_search import get_profile
 import re
 
@@ -13,6 +13,7 @@ async def main():
     keyword = await get_search_query()
     scraper_task = asyncio.create_task(search_main(keyword))
     cli_data = await main_cli(keyword)
+    await search_message()
     await scraper_task
     
     leads_data_file_name = re.sub(r'[^a-zA-Z0-9]+', '_', keyword)
