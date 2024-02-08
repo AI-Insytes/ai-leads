@@ -8,7 +8,7 @@ async def main(keyword=None):
     async with async_playwright() as p: 
         options = { 
             'args': [ 
-                '--disable-blink-features=AutomationControlled',
+                '--disable-blink-features=AutomationControlled', 
             ], 
             'slow_mo': 2000 
         } 
@@ -67,11 +67,11 @@ async def main(keyword=None):
                 await page.wait_for_timeout(500) 
                 more_articles = await page.query_selector_all('article') 
                 if not more_articles: 
-                    print("No more articles to load.") 
+                    # print("No more articles to load.") 
                     break 
                 current_scroll_height = await page.evaluate('document.body.scrollHeight') 
                 if current_scroll_height == prev_scroll_height: 
-                    print("No more content loaded.") 
+                    # print("No more content loaded.") 
                     break 
                 prev_scroll_height = current_scroll_height 
 
