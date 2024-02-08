@@ -15,7 +15,7 @@ async def get_search_query():
 
 async def get_message_length():
     question = "Does your message to leads have any length constraints?\n" \
-               "[1] No limit\n" \
+               "[1] Quick note\n" \
                "[2] 280 characters - Twitter/X post\n" \
                "[3] 300 characters - LinkedIn connection request message\n"
     console.print(question, style="bold bright_magenta")
@@ -27,7 +27,7 @@ async def get_message_length():
         console.print("Please select a valid option.", style="bold red")
 
     length_mapping = {
-        '1': "no length limit",
+        '1': "150",
         '2': "280",
         '3': "300"
     }
