@@ -163,3 +163,4 @@ cython_debug/
 __pycache__/
 .pytest_cache/
 .vercel
+.DS_Store

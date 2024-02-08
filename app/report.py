@@ -2,28 +2,35 @@ import json
 import csv
 import os
 from app.file_utils import save_to_file, create_directory
+from pathlib import Path
 
-def main_report(keyword):
+def main_report(lead_category):
 
-    csv_file_path = save_to_file({keyword}, 'leads_and_messages', 'report.csv')
-    json_file_path = save_to_file({keyword}, 'leads_and_messages', 'report.txt')
+    base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
+    json_file_name = f"{lead_category}_leads.json"
+    json_file_path = base_dir / json_file_name
 
-    try: 
-        with open(json_file_path, 'r') as json_file:
+    csv_file_path = Path(__file__).resolve().parent.parent / "leads_and_messages" / "leads_report.csv"
+
+    try:
+        with open(json_file_path, 'r', encoding='utf-8') as json_file:
             data = json.load(json_file)
 
-        # Write to a CSV file
-        with open(csv_file_path, 'w', newline='') as csv_file:
+        # Ensure the leads_and_messages directory exists
+        csv_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
             writer = csv.writer(csv_file)
             
-            # Iterate through each item in the JSON data
+            # No predefined headers; keys are written dynamically
             for item in data:
-                # For each key-value pair in the item, write it as a row
+                # Write each key-value pair on separate rows
                 for key, value in item.items():
                     writer.writerow([key, value])
                 
-                # Write an extra blank row to separate each entry
-                writer.writerow([])  # This creates the extra space between entries
+                # Optionally, add a blank row after each item for readability
+                writer.writerow([])
+
     except Exception as e:
         print(f"Failed to write to the report. Error: {e}")
 

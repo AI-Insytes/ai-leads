@@ -1,11 +1,9 @@
 import llama2
 import requests
-import time
 from datetime import datetime
 import json
 from app import cli
 from app.file_utils import save_to_file, create_directory
-import os
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 import asyncio
@@ -29,7 +27,7 @@ def prompt_main(cli_data, lead_context, lead_name):
     Lead Category: {lead_category}
     User Context: {user_context}
     Message Tone: {user_tone}
-    Message Length: {message_length}
+    Message Length: {message_length} characters or less
     Please craft a personalized message for {lead_name}, incorporating the given objective, background, context, tone, and lead category. The lead category is the industry or area of expertise the user is looking for connections in. Make this message a total of {message_length} characters or less. Create a subject line, address the lead by their first name (assuming the name listed first is their first name) and sign the message.
     """
     
@@ -72,10 +70,15 @@ def prompt_main(cli_data, lead_context, lead_name):
         
     try:
         # File operations
-        directory_name = "leads_and_messages"
-        filename = f"{lead_name.replace(' ', '_')}_message.txt"
-        create_directory(directory_name)
-        save_to_file(draft_message, directory_name, filename)
+        base_dir = Path(__file__).resolve().parent.parent / "leads_and_messages"
+        create_directory(base_dir)  # Ensure the directory exists
+        file_path = base_dir / f"{lead_name.replace(' ', '_')}_message.txt"
+        
+        # Save the draft message to the file
+        with open(file_path, 'w', encoding='utf-8') as file:
+            file.write(draft_message)
+        
+        print(f"Message saved to {file_path}")
     except Exception as e:
         print(f"Error during file operations: {e}")
         
@@ -113,6 +116,8 @@ async def get_lead_context(lead_category):
     return None  # Return None if no context is found
 
 async def get_lead_name(lead_category):
+    # TODO: add logic for if name is Null
+    
     # Dynamically determine the base directory
     base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
 
