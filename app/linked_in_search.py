@@ -70,7 +70,7 @@ async def get_profile(lead_name, keyword):
                 print(f"Profile URL: {url}")
                 
         # Ensure the directory exists
-        output_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'scraper_outputs'))
+        output_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', 'leads_and_messages'))
         os.makedirs(output_dir, exist_ok=True)
 
         
