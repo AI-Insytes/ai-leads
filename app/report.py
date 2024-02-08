@@ -1,28 +1,38 @@
 import json
 import csv
 import os
+from app.file_utils import save_to_file, create_directory
+from pathlib import Path
 
+def main_report(leads_data_file_name):
 
-csv_file_path = 'profile_scraper/scraper_outputs/report.csv'
+    base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
+    json_file_name = f"{leads_data_file_name}_leads.json"
+    json_file_path = base_dir / json_file_name
 
-def main_report(keyword):
-    # Read the JSON file
-    json_file_path = f'pseudobase/leads_data/{keyword}_data.json'
-    with open(json_file_path, 'r') as json_file:
-        data = json.load(json_file)
+    csv_file_path = Path(__file__).resolve().parent.parent / "leads_and_messages" / "leads_report.csv"
 
-    # Write to a CSV file
-    with open(csv_file_path, 'w', newline='') as csv_file:
-        writer = csv.writer(csv_file)
-        
-        # Iterate through each item in the JSON data
-        for item in data:
-            # For each key-value pair in the item, write it as a row
-            for key, value in item.items():
-                writer.writerow([key, value])
+    try:
+        with open(json_file_path, 'r', encoding='utf-8') as json_file:
+            data = json.load(json_file)
+
+        # Ensure the leads_and_messages directory exists
+        csv_file_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with open(csv_file_path, 'w', newline='', encoding='utf-8') as csv_file:
+            writer = csv.writer(csv_file)
             
-            # Write an extra blank row to separate each entry
-            writer.writerow([])  # This creates the extra space between entries
+            # No predefined headers; keys are written dynamically
+            for item in data:
+                # Write each key-value pair on separate rows
+                for key, value in item.items():
+                    writer.writerow([key, value])
+                
+                # add a blank row after each item for readability
+                writer.writerow([])
+
+    except Exception as e:
+        print(f"Failed to write to the report. Error: {e}")
 
 if __name__ == "__main__":
     base_directory = os.path.dirname(os.path.abspath(__file__))  # Get the script's directory
