@@ -4,6 +4,7 @@ from app.prompt import get_lead_context, get_lead_name
 from app.report import main_report
 import asyncio
 from app.search import search_main
+from app.linked_in_search import get_profile
 
 async def main():
     keyword = await get_search_query()
@@ -16,6 +17,8 @@ async def main():
     
     prompt_main(cli_data, lead_context, lead_name)
     main_report(keyword)
+    
+    await get_profile(lead_name, keyword)
 
 
 if __name__ == "__main__":
