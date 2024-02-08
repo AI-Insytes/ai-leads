@@ -3,10 +3,11 @@ from bs4 import BeautifulSoup
 import asyncio
 
 
-async def get_profile_from_publication(publication_link):
+async def get_profiles_from_publication(publication_link):
     about_markup = None
     profile_links = []
     profiles_markup = []
+    publication_description = ""
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(slow_mo=1000, headless=False)
@@ -23,12 +24,19 @@ async def get_profile_from_publication(publication_link):
 
         await browser.close()
 
+    # extract content from publication about page
     soup = BeautifulSoup(about_markup, "html.parser")
+    # extract author profile links
     profile_links_markup = soup.select("div.content-person")
     for profile_link in profile_links_markup:
         link_markup = profile_link.select("a")[0]
         link = link_markup.get("href")
         profile_links.append(link)
+    # extract publication description
+    description_markup = soup.select_one("div.body.markup")
+    if description_markup:
+        for element in description_markup:
+            publication_description += element.get_text()
 
     for link in profile_links:
         async with async_playwright() as p:
@@ -42,12 +50,12 @@ async def get_profile_from_publication(publication_link):
 
         profiles_markup.append(markup)
 
-    return profiles_markup
+    return profiles_markup, publication_description
 
 async def publication_search_profiles(search_query):
     publication_links = []
     publications_markup = None
-    profiles_markup = []
+    profiles_data = []
 
     async with async_playwright() as p:
         browser = await p.chromium.launch(slow_mo=1000, headless=False)
@@ -62,6 +70,7 @@ async def publication_search_profiles(search_query):
 
         await browser.close()
 
+    # extract publication links
     soup = BeautifulSoup(publications_markup, "html.parser")
     publication_links_markup = soup.select("div.reader2-page-body div div a.pencraft")
     for link in publication_links_markup:
@@ -69,48 +78,56 @@ async def publication_search_profiles(search_query):
         publication_links.append(publication_link)
 
     for publication_link in publication_links[:2]:  # Adjusted for testing
-        markup = await get_profile_from_publication(publication_link)
-        profiles_markup += markup
+        profile_data = await get_profiles_from_publication(publication_link)
+        profiles_data.append(profile_data)
 
-    return profiles_markup
+    return profiles_data
 
-def extract_profiles_data(profiles_markup):
+def extract_profiles_data(profiles_data):
     profile_objects = []
 
-    for markup in profiles_markup:
-        profile = {}
-        soup = BeautifulSoup(markup, "html.parser")
+    for profile_data in profiles_data:
+        profiles_markup, publication_description = profile_data
 
-        name_markup = soup.select_one("h1")
-        if name_markup:
-            user_name = name_markup.get_text().replace("\u00a0", "")
-            profile["lead-name"] = user_name
+        for markup in profiles_markup:
+            profile = {}
+            profile["context"] = ""
+            profile["context"] += f"Newsletter Description: {publication_description}"
 
-        blog_name_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")
-        if blog_name_markup:
-            profile["blog-name"] = blog_name_markup.get_text()
+            soup = BeautifulSoup(markup, "html.parser")
 
-        blog_link_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")
-        if blog_link_markup:
-            blog_link = blog_link_markup.get("href")
-            blog_link = "/".join(blog_link.split("/", 3)[:3])
-            profile["blog-link"] = blog_link
+            name_markup = soup.select_one("h1")
+            if name_markup:
+                user_name = name_markup.get_text().replace("\u00a0", "")
+                profile["lead-name"] = user_name
 
-        profile_links_markup = soup.select("#dialog6 div div a")
-        for link in profile_links_markup:
-            link_name = link.select_one("div").get_text() if link.select_one("div") else "Profile Link"
-            profile[link_name] = link.get("href")
+            blog_name_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a h4")
+            if blog_name_markup:
+                blog_name = blog_name_markup.get_text()
+                profile["blog-name"] = blog_name
+                profile["context"] += f"Newsletter Name: {blog_name}"
 
-        profile_objects.append(profile)
+            blog_link_markup = soup.select_one("div.pencraft.pc-display-flex.pc-flexDirection-column.pc-gap-16.pc-reset a")
+            if blog_link_markup:
+                blog_link = blog_link_markup.get("href")
+                blog_link = "/".join(blog_link.split("/", 3)[:3])
+                profile["blog-link"] = blog_link
+
+            profile_links_markup = soup.select("#dialog6 div div a")
+            for link in profile_links_markup:
+                link_name = link.select_one("div").get_text() if link.select_one("div") else "Profile Link"
+                profile[link_name] = link.get("href")
+
+            profile_objects.append(profile)
 
     return profile_objects
 
 async def main(search_query):
 
-    publication_profiles_markup = await publication_search_profiles(search_query)
-    publication_profile_objects = extract_profiles_data(publication_profiles_markup)
+    profiles_data = await publication_search_profiles(search_query)
+    profile_objects = extract_profiles_data(profiles_data)
 
-    return publication_profile_objects
+    return profile_objects
 
 
 if __name__ == "__main__":
