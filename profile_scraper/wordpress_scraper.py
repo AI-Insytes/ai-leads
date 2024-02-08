@@ -4,6 +4,27 @@ from bs4 import BeautifulSoup
 import asyncio 
 
 async def main(keyword=None): 
+    """
+    Scrape author information from WordPress Discover or search pages.
+
+    Args:
+        keyword (str, optional): Keyword for search. If provided, the function
+            will navigate to the WordPress search page with the specified keyword.
+            If not provided, it will navigate to the WordPress Discover page.
+            Defaults to None.
+
+    Returns:
+        list: A list of dictionaries containing author information. Each dictionary
+        has the following keys:
+        - 'lead-name': Author's name.
+        - 'context': Contextual information related to the author's blog or post.
+        - 'blog-name': Author's blog name.
+        - 'blog-url': URL of the author's blog.
+        - 'wordpress-url': URL of the author's WordPress profile.
+
+    Raises:
+        Exception: Any unexpected exception encountered during the scraping process.
+    """
     authors = [] 
     async with async_playwright() as p: 
         options = { 
