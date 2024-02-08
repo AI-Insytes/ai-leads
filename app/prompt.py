@@ -91,12 +91,12 @@ def prompt_main(cli_data, lead_context, lead_name, user_name):
         print(f"Error during file operations: {e}")
         
         
-async def get_lead_context(lead_category):
+async def get_lead_context(leads_data_file_name):
     
     # Dynamically determine the base directory
     base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
 
-    file_name = f"{lead_category}_leads.json"
+    file_name = f"{leads_data_file_name}_leads.json"
     file_path = base_dir / file_name
     
     # Wait for file to be available and not empty
@@ -128,12 +128,12 @@ async def get_lead_context(lead_category):
 
     return None  # Return None if no context is found
 
-async def get_lead_name(lead_category):
+async def get_lead_name(leads_data_file_name):
     
     # Dynamically determine the base directory
     base_dir = Path(__file__).resolve().parent.parent / "pseudobase" / "leads_data"
 
-    file_name = f"{lead_category}_leads.json"
+    file_name = f"{leads_data_file_name}_leads.json"
     file_path = base_dir / file_name
 
     # Wait for file to be available and not empty
