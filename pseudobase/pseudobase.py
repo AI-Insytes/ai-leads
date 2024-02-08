@@ -144,6 +144,15 @@ async def filter_leads(data):
     return sorted_data
 
 def create_file_path(keyword):
+    """
+    Create a sanitized file path based on the provided keyword.
+
+    Args:
+        keyword (str): The keyword to be sanitized and used in the file path.
+
+    Returns:
+        str: Sanitized file path for leads data.
+    """
     sanitized_keyword = re.sub(r'[^a-zA-Z0-9]+', '_', keyword)
     
     leads_json_path = os.path.join('pseudobase', 'leads_data', f'{sanitized_keyword}_leads.json')
