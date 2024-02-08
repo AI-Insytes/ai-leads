@@ -7,6 +7,7 @@ from app.search import search_main
 from app.linked_in_search import get_profile
 import re
 
+
 async def main():
     user_name = await get_user_name()
     keyword = await get_search_query()
