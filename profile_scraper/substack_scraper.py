@@ -20,7 +20,7 @@ async def get_profiles_from_publication(publication_link):
         await page.goto(publication_link)
 
         # skip subscription prompt
-        skip_button = await page.query_selector("button.maybe-later")
+        skip_button = await page.query_selector("#entry div.intro-popup div div div.vertically-centered button svg")
         if skip_button:
             await skip_button.click()
 
