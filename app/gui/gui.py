@@ -319,24 +319,24 @@ class Generation(QWidget):
         lead_name_task = get_lead_name(leads_data_file_name)
         lead_context_task = get_lead_context(leads_data_file_name)
         lead_name, lead_context = await asyncio.gather(lead_name_task, lead_context_task)
-        self.lead_name = "jake"
-        # try:
-        #     message = await prompt_main(cli_data, lead_context, lead_name, user_name)
-        #     self.loading_label.setText(message)
-        # except json.JSONDecodeError as e:
-        #     print(f"An error occurred: {e}")
-        #     fallback_message = f"""Subject: Looking to Connect
+        self.lead_name = lead_name
+        try:
+            message = await prompt_main(cli_data, lead_context, lead_name, user_name)
+            self.loading_label.setText(message)
+        except json.JSONDecodeError as e:
+            print(f"An error occurred: {e}")
+            fallback_message = f"""Subject: Looking to Connect
 
-        #                             Dear {lead_name},
+                                    Dear {lead_name},
 
-        #                             I hope this message finds you well. My name is [user_name], and I am reaching out to connect with you regarding {leads_data_file_name}. In today's dynamic landscape, connecting with professionals like yourself is essential, and I believe we can mutually benefit from sharing insights and experiences.
+                                    I hope this message finds you well. My name is [user_name], and I am reaching out to connect with you regarding {leads_data_file_name}. In today's dynamic landscape, connecting with professionals like yourself is essential, and I believe we can mutually benefit from sharing insights and experiences.
 
-        #                             I am interested in discussing {leads_data_file_name} and exploring potential opportunities for collaboration. Your expertise in this area caught my attention, and I would value the opportunity to connect and learn from your insights.
+                                    I am interested in discussing {leads_data_file_name} and exploring potential opportunities for collaboration. Your expertise in this area caught my attention, and I would value the opportunity to connect and learn from your insights.
 
-        #                             Best regards,
-        #                             {user_name}
-        #                             """
-        #     self.loading_label.setText(fallback_message)
+                                    Best regards,
+                                    {user_name}
+                                    """
+            self.loading_label.setText(fallback_message)
 
     @asyncSlot()
     async def main_report(self, leads_data_file_name): 
