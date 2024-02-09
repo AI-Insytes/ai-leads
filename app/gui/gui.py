@@ -121,7 +121,7 @@ class Generation(QWidget):
         page3_button_layout.addWidget(back_button_3)
 
         linkedin_search_button = self.create_push_button("Search LinkedIn Profile", font16, 30, fixed_width=400)
-        linkedin_search_button.clicked.connect(lambda: asyncio.create_task(self.linkedin_search_button(self.username_input)))
+        linkedin_search_button.clicked.connect(lambda: asyncio.create_task(self.linkedin_search_button()))
         page3_button_layout.addWidget(linkedin_search_button)
 
         third_layout.addLayout(page3_button_layout)
@@ -164,6 +164,7 @@ class Generation(QWidget):
         self.purpose_input = self.message_purpose_input
         self.context_input = self.user_context_input
         self.tone_combobox = self.message_tone_combobox
+        self.lead_name = ''
 
     def create_wrapped_label(self, text, font, width):
         label = QLabel(text)
@@ -318,32 +319,35 @@ class Generation(QWidget):
         lead_name_task = get_lead_name(leads_data_file_name)
         lead_context_task = get_lead_context(leads_data_file_name)
         lead_name, lead_context = await asyncio.gather(lead_name_task, lead_context_task)
-        try:
-            message = await prompt_main(cli_data, lead_context, lead_name, user_name)
-            self.loading_label.setText(message)
-        except json.JSONDecodeError as e:
-            print(f"An error occurred: {e}")
-            fallback_message = f"""Subject: Looking to Connect
+        self.lead_name = "jake"
+        # try:
+        #     message = await prompt_main(cli_data, lead_context, lead_name, user_name)
+        #     self.loading_label.setText(message)
+        # except json.JSONDecodeError as e:
+        #     print(f"An error occurred: {e}")
+        #     fallback_message = f"""Subject: Looking to Connect
 
-                                    Dear {lead_name},
+        #                             Dear {lead_name},
 
-                                    I hope this message finds you well. My name is [user_name], and I am reaching out to connect with you regarding {leads_data_file_name}. In today's dynamic landscape, connecting with professionals like yourself is essential, and I believe we can mutually benefit from sharing insights and experiences.
+        #                             I hope this message finds you well. My name is [user_name], and I am reaching out to connect with you regarding {leads_data_file_name}. In today's dynamic landscape, connecting with professionals like yourself is essential, and I believe we can mutually benefit from sharing insights and experiences.
 
-                                    I am interested in discussing {leads_data_file_name} and exploring potential opportunities for collaboration. Your expertise in this area caught my attention, and I would value the opportunity to connect and learn from your insights.
+        #                             I am interested in discussing {leads_data_file_name} and exploring potential opportunities for collaboration. Your expertise in this area caught my attention, and I would value the opportunity to connect and learn from your insights.
 
-                                    Best regards,
-                                    {user_name}
-                                    """
-            self.loading_label.setText(fallback_message)
+        #                             Best regards,
+        #                             {user_name}
+        #                             """
+        #     self.loading_label.setText(fallback_message)
 
     @asyncSlot()
     async def main_report(self, leads_data_file_name): 
         await main_report(leads_data_file_name)
 
-    async def linkedin_search_button(self, lead_name):
+    async def linkedin_search_button(self):
         keyword = self.keyword_input.text()
         self.stacked_widget.setCurrentIndex(3)
-        await self.profile_search(lead_name.text(), keyword)
+        lead_name = self.lead_name
+        print(lead_name)
+        await self.profile_search(lead_name, keyword)
 
     @asyncSlot()
     async def profile_search(self, lead_name, keyword):
@@ -355,7 +359,7 @@ class Generation(QWidget):
             self.loading_linkedin_label.setText("Error finding linkedin profile")
 
     def populate_linkedin_page(self):
-        lead_name = self.username_in.text()
+        lead_name = self.lead_name
         file_name = re.sub(r'[^a-zA-Z0-9]+', '_', lead_name)
         output_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..','leads_and_messages'))
         output_file_path = os.path.join(output_dir, f"{file_name}_profiles.txt")
@@ -524,7 +528,7 @@ class About(QWidget):
         member4_layout = self.create_member_layout(
             "Immanuel Shin",
             "https://avatars.githubusercontent.com/u/141205211?v=4",
-            "TeamMember1",
+            "https://github.com/ImmanuelShin",
             max_width,
             max_height
         )
