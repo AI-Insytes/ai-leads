@@ -139,7 +139,7 @@ async def filter_leads(data):
             seen_names.add(name)
             unique_pushup_data.append(lead_obj)
 
-    sorted_data = pushup_data + pushdown_data
+    sorted_data = unique_pushup_data + pushdown_data
 
     return sorted_data
 
