@@ -31,6 +31,11 @@ async def get_profile(pref, lead_name, keyword):
                 # Perform search
                 search_parameter = keyword
                 name = lead_name
+                if name is None:
+                    name = ""
+                if search_parameter is None:
+                    search_parameter = ""
+
                 combined_query = name + " " + search_parameter
                 await page.fill('input[aria-label="Search"]', combined_query)
                 await page.press('input[aria-label="Search"]', 'Enter')
