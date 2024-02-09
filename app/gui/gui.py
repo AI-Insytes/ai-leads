@@ -7,11 +7,14 @@ from qasync import QEventLoop, asyncSlot
 
 from app.search import search_main
 from app.prompt import prompt_main, get_lead_context, get_lead_name
+from app.report import main_report
+from app.linked_in_search import get_profile
 
 
 class Generation(QWidget):
     def __init__(self):
         super().__init__()
+        self.current_page_index = 0
         self.init_ui()
 
     def init_ui(self):
@@ -26,6 +29,9 @@ class Generation(QWidget):
 
         font16 = QFont()
         font16.setPointSize(16)
+
+        font18 = QFont()
+        font18.setPointSize(18)
 
         font20 = QFont()
         font20.setPointSize(20)
@@ -75,8 +81,14 @@ class Generation(QWidget):
 
         buttons_layout = QHBoxLayout()
 
-        back_button_2 = self.create_push_button("Back", font16, 30, fixed_width=button_width)
-        back_button_2.clicked.connect(self.show_first_page)
+        pages = ['Page 1', 'Page 2', 'Page 3', 'Page 4']
+
+        # back_button_2 = self.create_push_button("Back", font16, 30, fixed_width=button_width)
+        # back_button_2.clicked.connect(self.show_first_page)
+        # buttons_layout.addWidget(back_button_2)
+
+        back_button_2 = self.create_dropdown_button("Back", font16, pages, 30,  fixed_width=button_width)
+        back_button_2.currentIndexChanged.connect(self.back_dropdown_changed)
         buttons_layout.addWidget(back_button_2)
 
         self.submit_button = self.create_push_button("Submit", font16, 30, fixed_width=button_width)
@@ -99,18 +111,50 @@ class Generation(QWidget):
         # Third page
         third_layout = QVBoxLayout()
         self.loading_label = QLabel("Generating message...")
-        self.loading_label.setFont(font20)
+        self.loading_label.setFont(font16)
         third_layout.addWidget(self.loading_label)
-        back_button = self.create_push_button("Back", font24, 30, fixed_width=button_width)
-        back_button.clicked.connect(self.show_first_page)
-        third_layout.addWidget(back_button)
+
+        page3_button_layout = QHBoxLayout()
+
+        back_button_3 = self.create_dropdown_button("Back", font16, pages, 30,  fixed_width=button_width)
+        back_button_3.currentIndexChanged.connect(self.back_dropdown_changed)
+        page3_button_layout.addWidget(back_button_3)
+
+        linkedin_search_button = self.create_push_button("Search LinkedIn Profile", font16, 30, fixed_width=400)
+        linkedin_search_button.clicked.connect(lambda: asyncio.create_task(self.linkedin_search_button(self.username_input)))
+        page3_button_layout.addWidget(linkedin_search_button)
+
+        third_layout.addLayout(page3_button_layout)
 
         third_layout_widget = QWidget()
         third_layout_widget.setLayout(third_layout)
+        
+        # Fourth Page
+
+        fourth_layout = QVBoxLayout()
+        self.loading_linkedin_label = QLabel("Generating profiles...")
+        self.loading_linkedin_label.setFont(font16)
+        fourth_layout.addWidget(self.loading_linkedin_label)
+
+        page4_button_layout = QHBoxLayout()
+
+        back_button_4 = self.create_dropdown_button("Back", font16, pages, 30,  fixed_width=button_width)
+        back_button_4.currentIndexChanged.connect(self.back_dropdown_changed)
+        page4_button_layout.addWidget(back_button_4)
+
+        update_button = QPushButton("Update", self)
+        update_button.clicked.connect(self.populate_linkedin_page)
+        page4_button_layout.addWidget(update_button)
+
+        fourth_layout.addLayout(page4_button_layout)
+
+        fourth_layout_widget = QWidget()
+        fourth_layout_widget.setLayout(fourth_layout)
 
         self.stacked_widget.addWidget(first_layout_widget)
         self.stacked_widget.addWidget(second_layout_widget)
         self.stacked_widget.addWidget(third_layout_widget)
+        self.stacked_widget.addWidget(fourth_layout_widget)
 
         self.loading_label.setWordWrap(True)
 
@@ -185,10 +229,49 @@ class Generation(QWidget):
         if fixed_width:
             push_button.setFixedWidth(fixed_width)
         return push_button
+    
+    def create_dropdown_button(self, text, font, items, fixed_height, fixed_width=None):
+        dropdown_button = QComboBox(self)
+        dropdown_button.addItem(text)
+        dropdown_button.addItems(items)
+        dropdown_button.setFont(font)
+        dropdown_button.setFixedHeight(fixed_height)
+        dropdown_button.setStyleSheet("""
+                                    QPushButton {
+                                        border: none;
+                                        border-radius: 10px;
+                                        background-color: #93dbd5;
+                                        margin: 0 auto; 
+                                    }
+                                    
+                                    QPushButton:hover {
+                                        background-color: #90e8e1;
+                                    }
+                                    
+                                    QPushButton:pressed {
+                                        padding-top: 1px;
+                                        padding-left: 1px;
+                                    }
+                                """)
+        if fixed_width:
+            dropdown_button.setFixedWidth(fixed_width)
+        dropdown_button.activated.connect(self.back_dropdown_changed)
+        return dropdown_button
+    
+    def back_dropdown_changed(self, index):
+        if index == 1:
+            self.show_first_page()
+        elif index == 2:
+            self.stacked_widget.setCurrentIndex(1)
+        elif index == 3:
+            self.stacked_widget.setCurrentIndex(2)
+        elif index == 4:
+            self.stacked_widget.setCurrentIndex(3)
 
     async def show_next_page(self):
         keyword = self.keyword_query_input.text()
         sanitized_keyword = re.sub(r'[^a-zA-Z0-9]+', '_', keyword)
+        self.current_page_index = 1
         self.stacked_widget.setCurrentIndex(1)
         await self.start_search(sanitized_keyword)
     
@@ -212,40 +295,82 @@ class Generation(QWidget):
             "tone": message_tone,
         }
         self.stacked_widget.setCurrentIndex(2)
-
+        main_report(leads_data_file_name)
         try:
             await self.gather_information(cli_data, leads_data_file_name, user_name)
-        except Exception as e:
+        except json.JSONDecodeError as e:
             print(f"An error occurred: {e}")
-            fallback_message = f"""Subject: Stay Ahead of the Game with Our AI Solutions
+            fallback_message = f"""Subject: Looking to Connect
 
-                                    Tanya,
+                                    Dear [Lead Name],
 
-                                    As an AI solutions CEO, you know how crucial it is to stay ahead of the curve in the rapidly evolving digital landscape. That's why we're excited to offer our new free course and webinar on practical strategies for navigating this new world. Our lead category is ai, and we believe our expertise can help you connect with like-minded professionals in the industry. Let's stay ahead of the game together!
+                                    I hope this message finds you well. My name is [user_name], and I am reaching out to connect with you regarding {leads_data_file_name}. In today's dynamic landscape, connecting with professionals like yourself is essential, and I believe we can mutually benefit from sharing insights and experiences.
+
+                                    I am interested in discussing {leads_data_file_name} and exploring potential opportunities for collaboration. Your expertise in this area caught my attention, and I would value the opportunity to connect and learn from your insights.
 
                                     Best regards,
-                                    {user_name}"""
+                                    {user_name}
+                                    """
             self.loading_label.setText(fallback_message)
         
     @asyncSlot()
     async def gather_information(self, cli_data, leads_data_file_name, user_name):
         lead_name_task = get_lead_name(leads_data_file_name)
         lead_context_task = get_lead_context(leads_data_file_name)
+        lead_name, lead_context = await asyncio.gather(lead_name_task, lead_context_task)
         try:
-            lead_name, lead_context = await asyncio.gather(lead_name_task, lead_context_task)
-            message = await prompt_main(cli_data, lead_name, lead_context, user_name)
+            message = await prompt_main(cli_data, lead_context, lead_name, user_name)
             self.loading_label.setText(message)
-        except Exception as e:
+        except json.JSONDecodeError as e:
             print(f"An error occurred: {e}")
-            fallback_message = f"""Subject: Stay Ahead of the Game with Our AI Solutions
+            fallback_message = f"""Subject: Looking to Connect
 
-                                    Tanya,
+                                    Dear {lead_name},
 
-                                    As an AI solutions CEO, you know how crucial it is to stay ahead of the curve in the rapidly evolving digital landscape. That's why we're excited to offer our new free course and webinar on practical strategies for navigating this new world. Our lead category is ai, and we believe our expertise can help you connect with like-minded professionals in the industry. Let's stay ahead of the game together!
+                                    I hope this message finds you well. My name is [user_name], and I am reaching out to connect with you regarding {leads_data_file_name}. In today's dynamic landscape, connecting with professionals like yourself is essential, and I believe we can mutually benefit from sharing insights and experiences.
+
+                                    I am interested in discussing {leads_data_file_name} and exploring potential opportunities for collaboration. Your expertise in this area caught my attention, and I would value the opportunity to connect and learn from your insights.
 
                                     Best regards,
-                                    {user_name}"""
+                                    {user_name}
+                                    """
             self.loading_label.setText(fallback_message)
+
+    @asyncSlot()
+    async def main_report(self, leads_data_file_name): 
+        await main_report(leads_data_file_name)
+
+    async def linkedin_search_button(self, lead_name):
+        keyword = self.keyword_input.text()
+        self.stacked_widget.setCurrentIndex(3)
+        await self.profile_search(lead_name.text(), keyword)
+
+    @asyncSlot()
+    async def profile_search(self, lead_name, keyword):
+        try:
+            await get_profile(True, lead_name, keyword)
+        except TimeoutError as e:
+            self.loading_linkedin_label.setText("Error finding linkedin profile")
+        except Exception as e:
+            self.loading_linkedin_label.setText("Error finding linkedin profile")
+
+    def populate_linkedin_page(self):
+        lead_name = self.username_in.text()
+        file_name = re.sub(r'[^a-zA-Z0-9]+', '_', lead_name)
+        output_dir = os.path.normpath(os.path.join(os.path.dirname(__file__), '..', '..','leads_and_messages'))
+        output_file_path = os.path.join(output_dir, f"{file_name}_profiles.txt")
+        try:
+            with open(output_file_path, 'r') as file:
+                profiles_content = file.read()
+
+            self.loading_linkedin_label.setText(profiles_content)
+            self.loading_linkedin_label.setOpenExternalLinks(True)
+            self.stacked_widget.setCurrentIndex(3)
+            
+        except FileNotFoundError:
+            print(f"File not found: {output_file_path}")
+            self.loading_linkedin_label.setText("Profiles file not found.")
+
     def show_first_page(self):
         self.stacked_widget.setCurrentIndex(0)
 

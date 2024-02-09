@@ -99,8 +99,7 @@ async def get_profile(pref, lead_name, keyword):
                 print(f"An unexpected error occurred: {e}")
             finally:
                 await browser.close()  # Ensure the browser is closed even if an error occurs
-    return
-
+    return 
 
 
 ### Test #######################
