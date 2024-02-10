@@ -67,3 +67,6 @@ An app to assist with finding people of interest:
 * [Software Requirements](/Proj-Mngmt/requirements.md)
 * [Domain Model](/Proj-Mngmt/domain-model.md)
 * [Wireframe](/Proj-Mngmt/wireframe.md)
+
+## Project Deck
+[AI Leads](https://docs.google.com/presentation/d/10T4gv-m5Ny7QtRpaTEK8_a0GvbNCBd-98b4-8jxStO0/edit?usp=sharing)
