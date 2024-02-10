@@ -123,22 +123,28 @@ async def filter_leads(data):
     """
     def has_missing_fields(lead_obj):
         return any(value is None for value in lead_obj.values())
-    
-    pushup_data = [lead_obj for lead_obj in data if not has_missing_fields(lead_obj)]
-    pushdown_data = [lead_obj for lead_obj in data if has_missing_fields(lead_obj)]
 
-    random.shuffle(pushup_data)
+    unique_names = set()
+    unique_data_dict = {}
+    pushup_data = []
+    pushdown_data = []
 
-    seen_names = set()
-    unique_pushup_data = []
-    for lead_obj in pushup_data:
+    for lead_obj in data:
         name = lead_obj.get('lead-name') or lead_obj.get('blog-name')
         context = lead_obj.get('context')
 
-        if name not in seen_names or (context is not None and name in seen_names):
-            seen_names.add(name)
-            unique_pushup_data.append(lead_obj)
+        if name not in unique_names:
+            unique_names.add(name)
 
+            if (name not in unique_data_dict) or (context is not None and name in unique_data_dict):
+                unique_data_dict[name] = lead_obj
+    for name, lead_obj in unique_data_dict.items():
+        if not has_missing_fields(lead_obj):
+            pushup_data.append(lead_obj)
+        else:
+            pushdown_data.append(lead_obj)
+
+    random.shuffle(pushup_data)
     sorted_data = pushup_data + pushdown_data
 
     return sorted_data

@@ -10,7 +10,7 @@ import asyncio
 import sys
 
 
-def prompt_main(cli_data, lead_context, lead_name, user_name):
+async def prompt_main(cli_data, lead_context, lead_name, user_name):
     
     message_purpose = cli_data['purpose']
     lead_category = cli_data['query']
@@ -40,8 +40,8 @@ def prompt_main(cli_data, lead_context, lead_name, user_name):
     print("Compiling your leads and messages...")    
     
     # API endpoint URL
-    url = "http://localhost:11434/api/generate"
-    # url = "https://ol.bohio.me/api/generate" # external endpoint
+    # url = "http://localhost:11434/api/generate"
+    url = "https://ol.bohio.me/api/generate" # external endpoint
     
     model_name = "llama2"
     prompt_text = prompt
@@ -61,13 +61,14 @@ def prompt_main(cli_data, lead_context, lead_name, user_name):
     # Sending post request to the API
     response = requests.post(url, data=json.dumps(data), headers=headers)
     
-    
+    message = ''
     try:
         # Parsing the JSON response
         response_data = response.json()
         draft_message = response_data.get("response")
         for i in range(0, len(draft_message), 1000):  # Example: print 1000 characters at a time
-            print(draft_message[i:i+1000])
+            message = draft_message[i:i+1000]
+            print(message)
             time.sleep(0.1)  # Give a short pause to allow the buffer to flush
             sys.stdout.flush()  # Flush stdout buffer
 
@@ -89,6 +90,8 @@ def prompt_main(cli_data, lead_context, lead_name, user_name):
         print(f"Draft lead message saved to {file_path}")
     except Exception as e:
         print(f"Error during file operations: {e}")
+    
+    return message
         
         
 async def get_lead_context(leads_data_file_name):
