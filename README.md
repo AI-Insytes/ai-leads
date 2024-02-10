@@ -23,7 +23,7 @@
 
 ## Run App
 
-Leads data will be saved in the `leads_and_messages` directory as a csv file
+Leads data and generated messages will be saved in the `leads_and_messages` directory as a csv file
 
 ### CLI
 
@@ -31,7 +31,7 @@ From the root of the installed directory run the main module `python -m app.app`
 
 ### GUI
 
-From the root of the installed directory run the main module `python -m app.gui`
+From the root of the installed directory run the main module `python -m app.gui.gui`
 
 ## Project Members
 
