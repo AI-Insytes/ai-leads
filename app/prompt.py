@@ -66,24 +66,21 @@ async def prompt_main(cli_data, lead_context, lead_name, user_name):
         # Parsing the JSON response
         response_data = response.json()
         draft_message = response_data.get("response")
-        for i in range(0, len(draft_message), 1000):  # Example: print 1000 characters at a time
+        for i in range(0, len(draft_message), 1000): 
             message = draft_message[i:i+1000]
             print(message)
-            time.sleep(0.1)  # Give a short pause to allow the buffer to flush
-            sys.stdout.flush()  # Flush stdout buffer
+            time.sleep(0.1)  
+            sys.stdout.flush()  
 
-        # print("Draft Message:", draft_message)
     except json.JSONDecodeError as e:
         print(f"JSON parsing error: {e}")
-        return  # Stop execution if JSON parsing fails
+        return  
         
     try:
-        # File operations
         base_dir = Path(__file__).resolve().parent.parent / "leads_and_messages"
-        create_directory(base_dir)  # Ensure the directory exists
+        create_directory(base_dir)  
         file_path = base_dir / f"{lead_name.replace(' ', '_')}_message.txt"
         
-        # Save the draft message to the file
         with open(file_path, 'w', encoding='utf-8') as file:
             file.write(draft_message)
         
@@ -105,7 +102,7 @@ async def get_lead_context(leads_data_file_name):
     # Wait for file to be available and not empty
     while not file_path.exists() or file_path.stat().st_size == 0:
         print(f"Waiting for file {file_name} to be available...")
-        await asyncio.sleep(1)  # Sleep for a bit before retrying
+        await asyncio.sleep(1)  
     
     # Define a synchronous function to read the file, wrapped for async execution
     def read_file_sync(path):
@@ -127,9 +124,9 @@ async def get_lead_context(leads_data_file_name):
         for lead in leads:
             context = lead.get("context")
             if context:
-                return context  # Return the first context found
+                return context 
 
-    return None  # Return None if no context is found
+    return None  
 
 async def get_lead_name(leads_data_file_name):
     
@@ -168,9 +165,9 @@ async def get_lead_name(leads_data_file_name):
                 blog_name = lead.get("blog-name")
                 return blog_name if blog_name else "Unknown Blog"
             else:
-                return lead_name  # Return the first valid lead name found
+                return lead_name  
 
-    return None  # Return None if no lead name is found
+    return None  
 
 if __name__ == '__main__':
     prompt_main()

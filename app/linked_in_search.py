@@ -13,7 +13,7 @@ load_dotenv(env_file_path)
 
 async def get_profile(pref, lead_name, keyword):
     if pref:
-        async with async_playwright() as p:  # Use async with for async context manager
+        async with async_playwright() as p: 
             try:
                 # Launch browser
                 browser = await p.chromium.launch(headless=True, slow_mo=1000)
@@ -98,7 +98,7 @@ async def get_profile(pref, lead_name, keyword):
             except Exception as e:
                 print(f"An unexpected error occurred: {e}")
             finally:
-                await browser.close()  # Ensure the browser is closed even if an error occurs
+                await browser.close()  
     return 
 
 
