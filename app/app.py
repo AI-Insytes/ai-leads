@@ -21,7 +21,8 @@ async def main():
     lead_name = await get_lead_name(leads_data_file_name)
     lead_context = await get_lead_context(leads_data_file_name)
     
-    prompt_main(cli_data, lead_context, lead_name, user_name)
+    # added await here due to this error:  RuntimeWarning: coroutine 'prompt_main' was never awaited prompt_main(cli_data, lead_context, lead_name, user_name)
+    await prompt_main(cli_data, lead_context, lead_name, user_name)
     main_report(leads_data_file_name)
     pref = await profile_search_pref()
     await get_profile(pref, lead_name, keyword)

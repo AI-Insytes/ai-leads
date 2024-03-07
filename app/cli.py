@@ -14,8 +14,10 @@ async def get_user_name():
 
 
 async def get_search_query():
-    question = "What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads using a keyword format."
-    instruction = "You can search for multiple keywords separated by SPACES. Too many keywords (3+) will greatly limit the amount and/or quality of suggested leads."
+    # question = "What category of professional are you aiming to connect with? Specify the industry or area of expertise you're interested in for leads using a keyword format."
+    # instruction = "You can search for multiple keywords separated by SPACES. Too many keywords (3+) will greatly limit the amount and/or quality of suggested leads."
+    question = "What category of professional are you aiming to connect with?"
+    instruction = "Specify the industry or area of expertise using keywords. Separate multiple keywords with spaces. (e.g., 'Software Developer', 'Data Scientist', 'Marketing Manager')"
     console.print(question, style="bold bright_magenta")
     console.print(instruction, style="dim")
     user_response = await ainput("> ")
@@ -42,14 +44,19 @@ async def get_message_length():
     return length_mapping[user_choice]
 
 async def get_user_context():
-    question = "Provide additional context about yourself and or your request (e.g., is there an event or product they may be interested in?)"
+    # question = "Provide additional context about yourself and or your request (e.g., is there an event or product they may be interested in?)"
+    question = "Provide additional context about yourself and or your request"
+    instruction = "(e.g., is there an event or product they may be interested in?, 'I'm just a recent grad of a coding bootcamp')"
     console.print(question, style="bold bright_magenta")
+    console.print(instruction, style="dim")
     user_response = await ainput("> ") 
     return user_response
 
 async def get_message_purpose():
-    question = "What is the objective of your outreach message?"
+    # question = "What is the objective of your outreach message?"
+    instruction= "(e.g., 'Setting up a coffee chat to discuss career paths.', 'Exploring potential collaboration opportunities.', 'Introducing a new product and gauging interest.')"
     console.print(question, style="bold bright_magenta")
+    console.print(instruction, style="dim")
     user_response = await ainput("> ")
     return user_response
 
@@ -119,3 +126,6 @@ async def main_cli(lead_category=None):
 
 if __name__ == "__main__":
     asyncio.run(main_cli())
+
+
+
